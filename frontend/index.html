@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CodeSync</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0B2248; /* اللون الأساسي الداكن */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        header {
+            background: #fff;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        header .logo i {
+            font-size: 28px;
+            color: #245AB1; /* اللون الأساسي للعناصر البارزة */
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #245AB1;
+            font-weight: 600;
+        }
+        header .actions {
+            display: flex;
+            gap: 15px;
+        }
+        header button {
+            background: #245AB1;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        header button:hover {
+            background: #1e4a9a;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .content {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+        .content h2 {
+            color: #C8BFC7; /* اللون التكميلي الرمادي الفاتح */
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .content p {
+            color: #C8BFC7;
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            animation: fadeIn 0.7s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .content .actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .content button {
+            background: #245AB1;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 500;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .content button:hover {
+            background: #1e4a9a;
+        }
+        .content button i {
+            font-size: 20px;
+        }
+        .features {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            width: 250px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.5s ease-in-out;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .feature i {
+            font-size: 36px;
+            color: #7A9B76; /* اللون التكميلي الأخضر الفاتح */
+            margin-bottom: 15px;
+        }
+        .feature h3 {
+            color: #C8BFC7;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .feature p {
+            color: #C8BFC7;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            <h1>CodeSync</h1>
+        </div>
+        <div class="actions">
+            <button onclick="window.location.href='/signup'"><i class="fas fa-user-plus"></i> Sign Up</button>
+            <button onclick="window.location.href='/login'"><i class="fas fa-sign-in-alt"></i> Login</button>
+        </div>
+    </header>
+    <div class="container">
+        <div class="content">
+            <h2>CodeSync: Collaborate & Code Together</h2>
+            <p>Join thousands of developers to collaborate in real-time, share code, and learn new programming skills.</p>
+            <div class="actions">
+                <button onclick="window.location.href='/signup'"><i class="fas fa-user-plus"></i> Get Started</button>
+                <button onclick="window.location.href='/login'"><i class="fas fa-sign-in-alt"></i> Login</button>
+            </div>
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-code"></i>
+                    <h3>Real-Time Coding</h3>
+                    <p>Code with your team in real-time, no delays.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-users"></i>
+                    <h3>Team Collaboration</h3>
+                    <p>Invite your team and work together seamlessly.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-book"></i>
+                    <h3>Learn & Grow</h3>
+                    <p>Access resources to learn new programming languages.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

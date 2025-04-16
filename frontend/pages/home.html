@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home | CodeSync</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0B2248; /* اللون الأساسي الداكن */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        header {
+            background: #fff;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        header .logo i {
+            font-size: 28px;
+            color: #245AB1; /* اللون الأساسي للعناصر البارزة */
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #245AB1;
+            font-weight: 600;
+        }
+        header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        header .user-info span {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        header .user-info button {
+            background: #245AB1;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        header .user-info button:hover {
+            background: #1e4a9a;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .content {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        .content h2 {
+            color: #C8BFC7; /* اللون التكميلي الرمادي الفاتح */
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .content p {
+            color: #C8BFC7;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            animation: fadeIn 0.7s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: slideUp 0.5s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card i {
+            font-size: 40px;
+            color: #245AB1;
+            margin-bottom: 15px;
+        }
+        .card h3 {
+            color: #245AB1;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        .card p {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .card button {
+            background: #245AB1;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        .card button:hover {
+            background: #1e4a9a;
+        }
+        .learn-section {
+            margin-top: 50px;
+            text-align: center;
+        }
+        .learn-section h3 {
+            color: #C8BFC7;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .learn-section ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .learn-section li {
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .learn-section li:hover {
+            transform: translateY(-3px);
+        }
+        .learn-section a {
+            color: #245AB1;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .learn-section a:hover {
+            color: #7A9B76; /* اللون التكميلي الأخضر الفاتح */
+        }
+        .rooms-list {
+            margin-top: 50px;
+            text-align: center;
+        }
+        .rooms-list h3 {
+            color: #C8BFC7;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .room-item {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .room-item:hover {
+            transform: translateY(-3px);
+        }
+        .room-item span {
+            color: #333;
+            font-size: 16px;
+        }
+        .room-item .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .room-item button {
+            background: #245AB1;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .room-item button:hover {
+            background: #1e4a9a;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            width: 450px;
+            max-width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease-in-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-content h2 {
+            margin-top: 0;
+            color: #245AB1;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 2px solid #C8BFC7;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .modal-content input:focus {
+            border-color: #245AB1;
+            outline: none;
+        }
+        .modal-content .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .modal-content button {
+            background: #245AB1;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        .modal-content button:hover {
+            background: #1e4a9a;
+        }
+        .modal-content button.cancel {
+            background: #8A7E72;
+        }
+        .modal-content button.cancel:hover {
+            background: #73675e;
+        }
+        .error-message {
+            color: #8A7E72;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            <h1>CodeSync</h1>
+        </div>
+        <div class="user-info">
+            <span id="userName">User: Loading...</span>
+            <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </header>
+    <div class="container">
+        <div class="content">
+            <h2>Welcome to CodeSync</h2>
+            <p>Collaborate in real-time with your team. Create or join a room to start coding together!</p>
+            <div class="cards">
+                <div class="card">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>Create a Room</h3>
+                    <p>Start a new coding session and invite your team to collaborate.</p>
+                    <button onclick="showCreateRoomModal()">Create Now</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <h3>Join a Room</h3>
+                    <p>Join an existing room to code with your team in real-time.</p>
+                    <button onclick="showJoinRoomModal()">Join Now</button>
+                </div>
+            </div>
+            <div class="learn-section">
+                <h3>Learn Programming Languages</h3>
+                <ul>
+                    <li><a href="https://www.w3schools.com/js/" target="_blank">Learn JavaScript</a></li>
+                    <li><a href="https://www.w3schools.com/python/" target="_blank">Learn Python</a></li>
+                    <li><a href="https://www.w3schools.com/java/" target="_blank">Learn Java</a></li>
+                </ul>
+            </div>
+            <div class="rooms-list" id="roomsList">
+                <h3>Your Rooms</h3>
+                <!-- Rooms will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal لإنشاء Room جديدة -->
+    <div class="modal" id="createRoomModal">
+        <div class="modal-content">
+            <h2>Create New Room</h2>
+            <input type="text" id="newRoomId" placeholder="Enter Room ID">
+            <input type="password" id="roomPassword" placeholder="Set Password (Optional)">
+            <div class="button-group">
+                <button onclick="createRoom()">Create</button>
+                <button class="cancel" onclick="closeModal('createRoomModal')">Cancel</button>
+            </div>
+            <div class="error-message" id="createRoomError"></div>
+        </div>
+    </div>
+
+    <!-- Modal للانضمام لـ Room -->
+    <div class="modal" id="joinRoomModal">
+        <div class="modal-content">
+            <h2>Join a Room</h2>
+            <input type="text" id="joinRoomId" placeholder="Enter Room ID">
+            <input type="password" id="joinRoomPassword" placeholder="Enter Password (If Required)">
+            <div class="button-group">
+                <button onclick="joinRoom()">Join</button>
+                <button class="cancel" onclick="closeModal('joinRoomModal')">Cancel</button>
+            </div>
+            <div class="error-message" id="joinRoomError"></div>
+        </div>
+    </div>
+
+    <script>
+        let username = null;
+
+        // دالة إنشاء Room جديدة
+        function createRoom() {
+            const roomId = document.getElementById('newRoomId').value.trim();
+            const password = document.getElementById('roomPassword').value.trim();
+            const createRoomError = document.getElementById('createRoomError');
+            createRoomError.style.display = 'none';
+
+            if (!roomId) {
+                createRoomError.textContent = 'Please enter a Room ID';
+                createRoomError.style.display = 'block';
+                return;
+            }
+
+            fetch('/api/createRoom', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ roomId, owner: username, password })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        closeModal('createRoomModal');
+                        window.location.href = `/dashboard?room=${data.roomId}`;
+                    } else {
+                        createRoomError.textContent = data.message || 'Error creating room';
+                        createRoomError.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error creating room:', error);
+                    createRoomError.textContent = 'Error creating room';
+                    createRoomError.style.display = 'block';
+                });
+        }
+
+        // دالة الانضمام لـ Room
+        function joinRoom() {
+            const roomId = document.getElementById('joinRoomId').value.trim();
+            const password = document.getElementById('joinRoomPassword').value.trim();
+            const joinRoomError = document.getElementById('joinRoomError');
+            joinRoomError.style.display = 'none';
+
+            if (!roomId) {
+                joinRoomError.textContent = 'Please enter a Room ID';
+                joinRoomError.style.display = 'block';
+                return;
+            }
+
+            fetch(`/api/checkRoom?roomId=${roomId}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        if (data.hasPassword && !password) {
+                            joinRoomError.textContent = 'This room requires a password';
+                            joinRoomError.style.display = 'block';
+                            return;
+                        }
+                        fetch('/api/verifyRoomPassword', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify({ roomId, password })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    closeModal('joinRoomModal');
+                                    window.location.href = `/dashboard?room=${roomId}`;
+                                } else {
+                                    joinRoomError.textContent = data.message;
+                                    joinRoomError.style.display = 'block';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error verifying password:', error);
+                                joinRoomError.textContent = 'Error verifying password';
+                                joinRoomError.style.display = 'block';
+                            });
+                    } else {
+                        joinRoomError.textContent = 'Room not found';
+                        joinRoomError.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking room:', error);
+                    joinRoomError.textContent = 'Error checking room';
+                    joinRoomError.style.display = 'block';
+                });
+        }
+
+        // دالة عرض Modal
+        function showCreateRoomModal() {
+            document.getElementById('createRoomModal').style.display = 'flex';
+            document.getElementById('newRoomId').value = `room_${Math.random().toString(36).substr(2, 9)}`;
+            document.getElementById('roomPassword').value = '';
+            document.getElementById('createRoomError').style.display = 'none';
+        }
+
+        function showJoinRoomModal() {
+            document.getElementById('joinRoomModal').style.display = 'flex';
+            document.getElementById('joinRoomId').value = '';
+            document.getElementById('joinRoomPassword').value = '';
+            document.getElementById('joinRoomError').style.display = 'none';
+        }
+
+        // دالة إغلاق Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            if (modalId === 'createRoomModal') {
+                document.getElementById('newRoomId').value = '';
+                document.getElementById('roomPassword').value = '';
+                document.getElementById('createRoomError').style.display = 'none';
+            } else if (modalId === 'joinRoomModal') {
+                document.getElementById('joinRoomId').value = '';
+                document.getElementById('joinRoomPassword').value = '';
+                document.getElementById('joinRoomError').style.display = 'none';
+            }
+        }
+
+        // دالة جلب الـ Rooms
+        function loadRooms() {
+            fetch(`/api/userRooms?username=${username}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const roomsList = document.getElementById('roomsList');
+                    const roomsContainer = roomsList.querySelector('h3').nextElementSibling || document.createElement('div');
+                    roomsContainer.innerHTML = '';
+                    if (data.rooms && data.rooms.length > 0) {
+                        data.rooms.forEach(room => {
+                            const roomItem = document.createElement('div');
+                            roomItem.className = 'room-item';
+                            roomItem.innerHTML = `
+                                <span>Room: ${room.roomId} (Last Opened: ${new Date(room.lastOpened).toLocaleString()})</span>
+                                <div class="actions">
+                                    <button onclick="window.location.href='/dashboard?room=${room.roomId}'"><i class="fas fa-sign-in-alt"></i> Join</button>
+                                </div>
+                            `;
+                            roomsContainer.appendChild(roomItem);
+                        });
+                        roomsList.appendChild(roomsContainer);
+                    } else {
+                        roomsContainer.innerHTML = '<p>No rooms found.</p>';
+                        roomsList.appendChild(roomsContainer);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading rooms:', error);
+                    const roomsContainer = document.getElementById('roomsList');
+                    roomsContainer.innerHTML = '<p>Error loading rooms.</p>';
+                });
+        }
+
+        // دالة الـ Logout
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/'; // توجه لـ index.html
+        }
+
+        // جلب اسم المستخدم من الـ Token
+        function loadUserInfo() {
+            try {
+                const token = localStorage.getItem('token');
+                if (token) {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    username = payload.username || 'Unknown';
+                    document.getElementById('userName').textContent = `User: ${username}`;
+                    loadRooms();
+                } else {
+                    document.getElementById('userName').textContent = 'User: Not logged in';
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                document.getElementById('userName').textContent = 'User: Error loading info';
+                window.location.href = '/login';
+            }
+        }
+
+        window.onload = loadUserInfo;
+    </script>
+</body>
+</html>
