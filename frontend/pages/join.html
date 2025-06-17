@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Join Room | CodeSync</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0B2248; /* اللون الأساسي الداكن */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .join-container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .join-container h2 {
+            color: #245AB1;
+            margin-bottom: 15px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .join-container p {
+            color: #555;
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .join-container .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .join-container button {
+            background: #245AB1;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .join-container button:hover {
+            background: #1e4a9a;
+        }
+        .join-container button i {
+            font-size: 18px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            width: 400px;
+            max-width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease-in-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-content h2 {
+            margin-top: 0;
+            color: #245AB1;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 2px solid #C8BFC7;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .modal-content input:focus {
+            border-color: #245AB1;
+            outline: none;
+        }
+        .modal-content .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .modal-content button {
+            background: #245AB1;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        .modal-content button:hover {
+            background: #1e4a9a;
+        }
+        .modal-content button.cancel {
+            background: #8A7E72;
+        }
+        .modal-content button.cancel:hover {
+            background: #73675e;
+        }
+        .error-message {
+            color: #8A7E72;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="join-container">
+        <h2>Join a Room</h2>
+        <p id="roomInfo">Loading room information...</p>
+        <div class="actions" id="actions">
+            <!-- Actions will be populated dynamically -->
+        </div>
+    </div>
+
+    <!-- Modal لإدخال Password -->
+    <div class="modal" id="passwordModal">
+        <div class="modal-content">
+            <h2>Enter Room Password</h2>
+            <input type="password" id="joinPassword" placeholder="Enter Password">
+            <div class="button-group">
+                <button onclick="joinRoom()">Join</button>
+                <button class="cancel" onclick="closeModal('passwordModal')">Cancel</button>
+            </div>
+            <div class="error-message" id="passwordError"></div>
+        </div>
+    </div>
+
+    <script>
+        let roomId = null;
+
+        // جلب الـ Token من الـ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        // تحميل معلومات الـ Room
+        function loadRoomInfo() {
+            if (!token) {
+                document.getElementById('roomInfo').textContent = 'Invalid or missing token';
+                return;
+            }
+
+            fetch(`/api/decodeRoomToken?token=${token}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        roomId = data.roomId;
+                        document.getElementById('roomInfo').textContent = `You are joining Room: ${roomId}`;
+
+                        // التحقق من حالة تسجيل الدخول
+                        const token = localStorage.getItem('token');
+                        if (token) {
+                            // مستخدم مسجل دخول بالفعل، نتحقق من الـ Room
+                            checkRoom();
+                        } else {
+                            // مستخدم غير مسجل دخول
+                            document.getElementById('actions').innerHTML = `
+                                <button onclick="window.location.href='/signup'"><i class="fas fa-user-plus"></i> Sign Up</button>
+                                <button onclick="window.location.href='/login'"><i class="fas fa-sign-in-alt"></i> Login</button>
+                            `;
+                        }
+                    } else {
+                        document.getElementById('roomInfo').textContent = data.message;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error decoding token:', error);
+                    document.getElementById('roomInfo').textContent = 'Error decoding token';
+                });
+        }
+
+        // التحقق من الـ Room
+        function checkRoom() {
+            fetch(`/api/checkRoom?roomId=${roomId}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        // دايمًا نطلب الباسورد لو الـ Room محمي، حتى لو الـ Token صح
+                        document.getElementById('passwordModal').style.display = 'flex';
+                    } else {
+                        document.getElementById('roomInfo').textContent = 'Room not found';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking room:', error);
+                    document.getElementById('roomInfo').textContent = 'Error checking room';
+                });
+        }
+
+        // دالة Join Room
+        function joinRoom() {
+            const password = document.getElementById('joinPassword').value.trim();
+            const passwordError = document.getElementById('passwordError');
+            passwordError.style.display = 'none';
+
+            if (!roomId) {
+                passwordError.textContent = 'No Room ID to join';
+                passwordError.style.display = 'block';
+                return;
+            }
+
+            if (!password) {
+                passwordError.textContent = 'Please enter a password';
+                passwordError.style.display = 'block';
+                return;
+            }
+
+            fetch(`/api/verifyRoomPassword`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ roomId, password })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        closeModal('passwordModal');
+                        window.location.href = `/dashboard?room=${roomId}`;
+                    } else {
+                        passwordError.textContent = data.message;
+                        passwordError.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error verifying password:', error);
+                    passwordError.textContent = 'Error verifying password';
+                    passwordError.style.display = 'block';
+                });
+        }
+
+        // دالة إغلاق Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.getElementById('joinPassword').value = '';
+            document.getElementById('passwordError').style.display = 'none';
+        }
+
+        window.onload = loadRoomInfo;
+    </script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+/* Start Global Rules */
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+:root {
+    --main-color: #0b2248;
+    --main-color-alt: #11274b;
+    --text-main-color: #2b3749;
+    --text-main-color-tertiary: #42576e;
+    --main-transition: .3s;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+a {
+    text-decoration: none;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.container {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Small Devices */
+@media (min-width: 768px) {
+    .container {
+        width: 750px;
+    }
+}
+
+/* Medium Devices */
+@media (min-width: 992px) {
+    .container {
+        width: 970px;
+    }
+}
+
+/* Large Devices */
+@media (min-width: 1200px) {
+    .container {
+        width: 1170px;
+    }
+}
+
+
+/* End Global Rules */
+
+@keyframes cir-up {
+    0% {
+        transform: translateY(0px);
+    }
+
+    100% {
+        transform: translateY(-1740px);
+    }
+}
+
+@keyframes cir-down {
+    0% {
+        transform: translateY(-1740px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* End Animation */
+
+.full-layout {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+
+/* Start Form */
+.full-layout .login-section {
+    flex-basis: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-section .logo img {
+    width: 150px;
+    margin-bottom: 12px;
+}
+
+.login-section .welcome-msg {
+    padding-bottom: 16px;
+    letter-spacing: 1.2px;
+}
+
+.login-section .new-acc {
+    font-size: 12px;
+}
+
+.login-section .new-acc span a {
+    cursor: pointer;
+    color: #245ab1;
+}
+
+.login-section .new-acc span a:hover {
+    color: #3e71c4;
+}
+
+.login-section .login-form form {
+    text-align: center;
+}
+
+.login-section .login-form input:not([type="checkbox"], [type="submit"]) {
+    display: block;
+    min-width: 300px;
+    padding: 12px;
+    margin-top: 20px;
+    border-radius: 8px;
+    border: .1px solid rgba(0, 0, 0, 0.432);
+    font-size: 12px;
+    outline: none;
+}
+
+.login-section .login-form .login-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 12px;
+}
+
+.login-section .login-form .login-actions .remember-me {
+    display: flex;
+}
+
+.login-section .login-form .login-actions .remember-me label {
+    padding-left: 8px;
+}
+
+.login-section .login-form .login-actions a {
+    color: #245ab1;
+    font-size: 12px;
+}
+
+.login-section .login-form .login-actions a:hover {
+    color: #3e71c4;
+}
+
+.login-section .login-form input[type="submit"] {
+    background-color: var(--text-main-color);
+    color: white;
+    font-size: 16px;
+    margin-top: 20px;
+    padding: 12px 20px;
+    border: none;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.login-section .login-form input[type="submit"]:hover {
+    cursor: pointer;
+    background-color: var(--text-main-color-tertiary);
+}
+
+/* End Form */
+
+
+/* Start Login Decoration */
+.full-layout .decoration-section {
+    background-color: var(--main-color);
+    flex-basis: 40%;
+    display: flex;
+    justify-content: space-around;
+    overflow: hidden;
+}
+
+.full-layout .decoration-section div span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 25px 0;
+    width: 120px;
+    height: 120px;
+    background-color: #245ab1;
+    border-radius: 50%;
+}
+
+.full-layout .decoration-section div span i {
+    color: white;
+    font-size: 40px;
+}
+
+.full-layout .decoration-section div.cir1,
+.full-layout .decoration-section div.cir3 {
+    animation: cir-up 36s linear infinite;
+}
+
+.full-layout .decoration-section div.cir2 {
+    transform: translateY(-145px);
+    animation: cir-down 38s linear infinite;
+}
+
+/* End Login Decoration */

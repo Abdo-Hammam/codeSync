@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="/assets/imgs/favicon.png">
+    <title>Dashboard | CodeSync</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+</head>
+
+<body>
+    <div class="notification" id="notification"></div>
+    <div class="access-request-notification" id="accessRequestNotification">
+        <span id="accessRequestMessage"></span>
+        <button onclick="grantAccess()">Grant Access</button>
+        <button onclick="denyAccess()">Deny</button>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <a href="#" onclick="changeLanguage('javascript')"><i class="fab fa-js-square"></i></a>
+            <a href="#" onclick="changeLanguage('typescript')"><i class="devicon-typescript-plain"></i></a>
+            <a href="#" onclick="changeLanguage('python')"><i class="fab fa-python"></i></a>
+            <a href="#" onclick="changeLanguage('java')"><i class="fab fa-java"></i></a>
+            <a href="#" onclick="changeLanguage('cpp')"><i class="devicon-cplusplus-plain"></i></a>
+            <a href="#" onclick="changeLanguage('csharp')"><i class="devicon-csharp-plain"></i></a>
+            <a href="#" onclick="changeLanguage('ruby')"><i class="fas fa-gem"></i></a>
+            <a href="#" onclick="changeLanguage('php')"><i class="fab fa-php"></i></a>
+            <a href="#" onclick="changeLanguage('go')"><i class="devicon-go-original-wordmark"></i></a>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="project-info">
+                    <a href="/home">
+                        <img src="../assets/imgs/main-logo2.png" alt="" style="width: 150px;">
+                    </a>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <span id="userName" onclick="toggleDropdown()">User: Loading...</span>
+                        <i id="userRoleIcon" class=""></i>
+                        <div class="dropdown" id="usersDropdown">
+                            <div id="usersList"></div>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Exit Room</button>
+                </div>
+            </div>
+            <div class="editor-container">
+                <div class="editor-section">
+                    <div class="toolbar">
+                        <div class="toolbar-left">
+                            <div class="language-selector">
+                                <select id="languageSelect" onchange="changeLanguage(this.value)">
+                                    <option value="javascript">JavaScript</option>
+                                    <option value="typescript">TypeScript</option>
+                                    <option value="python">Python</option>
+                                    <option value="java">Java</option>
+                                    <option value="cpp">C++</option>
+                                    <option value="csharp">C#</option>
+                                    <option value="ruby">Ruby</option>
+                                    <option value="php">PHP</option>
+                                    <option value="go">Go</option>
+                                </select>
+                            </div>
+                            <button class="run-btn" onclick="runCode()"><i class="fas fa-play"></i> Run</button>
+                            <button class="request-access-btn" id="requestAccessBtn" style="display: none;"
+                                onclick="requestAccess()"><i class="fas fa-lock-open"></i> Request Access</button>
+                        </div>
+                        <div>
+                            <button class="share-btn" onclick="shareRoom()"><i class="fas fa-share-alt"></i>
+                                Share</button>
+                            <button class="clear-btn" onclick="clearEditor()"><i class="fas fa-eraser"></i>
+                                Clear</button>
+                        </div>
+                    </div>
+                    <div id="editor"></div>
+                </div>
+                <div class="output-section">
+                    <div class="output" id="output">Output will appear here...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/java/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/ruby/ruby.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/php/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/go/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/typescript/typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
+    <script src="../assets/js/dashboard.js"></script>
+</body>
+
+</html>
