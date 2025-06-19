@@ -1,195 +1,156 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CodeSync</title>
-    <link rel="icon" type="image/png" href="./assets/imgs/favicon.png" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <link rel="stylesheet" href="./assets/css/index-style.css" />
-    <link rel="stylesheet" href="./assets/css/body-style.css" />
-  </head>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CodeSync</title>
+  <link rel="icon" type="image/png" href="./assets/imgs/favicon.png" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/index-style.css" />
+  <link rel="stylesheet" href="./assets/css/body-style.css" />
+</head>
+<body>
+  <header>
+    <nav class="logo-nav">
+      <div class="logo">
+        <a href="/"><img src="./assets/imgs/main-logo3.png" alt="CodeSync Logo" /></a>
+      </div>
+      <div class="links">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#">Join Room</a></li>
+          <li><a href="#steps">How it works</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+    <button class="signup" onclick="location.href='/signup'">Get Started</button>
+  </header>
 
-  <body>
-    <!-- Header -->
-    <header>
-      <nav class="logo-nav">
-        <div class="logo">
-          <a href="/"><img src="./assets/imgs/main-logo3.png" alt="" /></a>
-        </div>
-
-        <div class="links">
-          <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Features</a></li>
-            <li><a href="#">Join Room</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-          </ul>
-        </div>
-      </nav>
-
-      <button class="signup">Get Started</button>
-    </header>
-    <!-- Header -->
-
-    <div class="landing">
-      <div class="container">
-        <div class="text">
-          <h2>
-            Code Together, <br />
-            Anytime, <br />
-            Anywhere
-          </h2>
-          <p>
-            CodeSync is a real-time collaborative coding platform <br />
-            designed for developers and students. Share code, <br />
-            learn, and build together seamlessly.
-          </p>
-          <button
-            class="signup fade-in-up"
-            onclick="window.location.href='/signup'"
-          >
-            Start Coding Now
-            <i class="fa-solid fa-arrow-right" style="margin-left: 15px"></i>
-          </button>
-        </div>
-        <div class="blurred-border">
-          <img
-            src="./assets/imgs/ales-nesetril-Im7lZjxeLhg-unsplash.jpg"
-            alt="landpage image"
-          />
-        </div>
+  <section class="landing">
+    <div class="container">
+      <div class="text">
+        <h2>Code Together,<br />Anytime,<br />Anywhere</h2>
+        <p>CodeSync is a real-time collaborative coding platform<br />designed for developers and students. Share code,<br />learn, and build together seamlessly.</p>
+        <button class="signup fade-in-up" onclick="location.href='/signup'">
+          Start Coding Now <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+      <div class="blurred-border">
+        <img src="./assets/imgs/ales-nesetril-Im7lZjxeLhg-unsplash.jpg" alt="Landing illustration" />
       </div>
     </div>
+  </section>
 
-    <a class="mouse" href="#features"></a>
+  <a class="mouse" href="#features"></a>
 
-    <div class="features" id="features">
-      <div class="container fade-in-up">
-        <div class="main-title">Unlock Powerful Collaboration Features</div>
-        <div class="description-text">
-          CodeSync provides an integrated environment designed to boost your
-          productivity and make collaborative coding effortless.
-        </div>
-        <div class="feature fade-in-up">
-          <img src="./assets/imgs/feature2.png" alt="" />
-          <div class="text">
-            <h3>Real-Time Coding</h3>
-            <p>
-              Code with your team in real-time — no delays, no waiting.
-              Instantly see changes as they happen, collaborate smoothly, and
-              stay in sync from anywhere in the world.
-            </p>
-          </div>
-        </div>
+  <section class="features" id="features">
+    <div class="container fade-in-up">
+      <div class="main-title">Unlock Powerful Collaboration Features</div>
+      <div class="description-text">CodeSync provides an integrated environment designed to boost your productivity and make collaborative coding effortless.</div>
 
-        <div class="feature fade-in-up">
-          <div class="text">
-            <h3>Team Collaboration</h3>
-            <p>
-              Invite teammates, assign roles, and share projects effortlessly.
-              Whether you're building a website or debugging code, teamwork has
-              never been this easy and productive.
-            </p>
-          </div>
-          <img src="./assets/imgs/feature1.png" alt="" />
-        </div>
-
-        <div class="feature fade-in-up">
-          <img src="./assets/imgs/feature3.png" alt="" />
-          <div class="text">
-            <h3>Learn & Grow</h3>
-            <p>
-              Access a curated library of resources to master new programming
-              languages, explore frameworks, and level up your skills — all
-              inside your workspace.
-            </p>
-          </div>
-        </div>
-
-        <div class="feature fade-in-up">
-          <div class="text">
-            <h3>Multi-language Support</h3>
-            <p>
-              Work across various programming languages with syntax highlighting
-              and intelligent auto-completion.
-            </p>
-          </div>
-          <img src="./assets/imgs/feature4.png" alt="" />
+      <div class="feature fade-in-up">
+        <img src="./assets/imgs/feature2.png" alt="" />
+        <div class="text">
+          <h3><i class="fa-solid fa-code"></i> Real-Time Coding</h3>
+          <p>Code with your team in real-time — no delays, no waiting. Instantly see changes as they happen, collaborate smoothly, and stay in sync from anywhere in the world.</p>
         </div>
       </div>
-    </div>
-
-    <div class="best-choice">
-      <div class="container">
+      <div class="feature fade-in-up">
         <div class="text">
-          <h1>Why CodeSync is Your Best Choice</h1>
-          <p>
-            Experience a coding environment built for efficiency, security, and
-            seamless teamwork.
-          </p>
-          <div class="f1">
-            <i class="fa-solid fa-brain"></i>
-            <p>
-              <span style="font-weight: bold">Intuitive User Interface</span>:
-              Get started quickly with a clean, easy-to-navigate interface that
-              minimizes distractions.
-            </p>
-          </div>
-          <div class="f2">
-            <i class="fa-solid fa-rocket"></i>
-            <p>
-              <span style="font-weight: bold">Blazing Fast Performance</span>:
-              Enjoy real-time updates without lag, even with multiple
-              collaborators.
-            </p>
-          </div>
-          <div class="f3">
-            <i class="fa-solid fa-shield"></i>
-            <p>
-              <span style="font-weight: bold">Robust Security Measures</span>:
-              Industry-standard encryption ensures your code and data are always
-              safe.
-            </p>
-          </div>
-          <div class="f4">
-            <i class="fa-solid fa-award"></i>
-            <p>
-              <span style="font-weight: bold">Dedicated Support</span>: Our team
-              is here to help you maximize your collaborative coding experience.
-            </p>
-          </div>
+          <h3>Team Collaboration</h3>
+          <p>Invite teammates, assign roles, and share projects effortlessly. Whether you're building a website or debugging code, teamwork has never been this easy and productive.</p>
+        </div>
+        <img src="./assets/imgs/feature1.png" alt="" />
+      </div>
+      <div class="feature fade-in-up">
+        <img src="./assets/imgs/feature3.png" alt="" />
+        <div class="text">
+          <h3>Learn & Grow</h3>
+          <p>Access a curated library of resources to master new programming languages, explore frameworks, and level up your skills — all inside your workspace.</p>
+        </div>
+      </div>
+      <div class="feature fade-in-up">
+        <div class="text">
+          <h3>Multi-language Support</h3>
+          <p>Work across various programming languages with syntax highlighting and intelligent auto-completion.</p>
         </div>
         <img src="./assets/imgs/feature4.png" alt="" />
       </div>
     </div>
-  </body>
+  </section>
+
+  <section class="best-choice">
+    <div class="container">
+      <div class="text">
+        <h1>Why CodeSync is Your Best Choice</h1>
+        <p>Experience a coding environment built for efficiency, security, and seamless teamwork.</p>
+        <div class="f1"><i class="fa-solid fa-brain"></i><p><span>Intuitive User Interface</span>: Get started quickly with a clean, easy-to-navigate interface that minimizes distractions.</p></div>
+        <div class="f2"><i class="fa-solid fa-rocket"></i><p><span>Blazing Fast Performance</span>: Enjoy real-time updates without lag, even with multiple collaborators.</p></div>
+        <div class="f3"><i class="fa-solid fa-shield"></i><p><span>Robust Security Measures</span>: Industry-standard encryption ensures your code and data are always safe.</p></div>
+        <div class="f4"><i class="fa-solid fa-award"></i><p><span>Dedicated Support</span>: Our team is here to help you maximize your collaborative coding experience.</p></div>
+      </div>
+      <video autoplay muted loop>
+        <source src="./assets/imgs/206779_small.mp4" type="video/mp4" />
+      </video>
+    </div>
+  </section>
+
+  <section class="steps" id="steps">
+    <div class="container">
+      <div class="text">
+        <h1>Simple Steps to Start Collaborating</h1>
+        <p>Getting started with CodeSync is quick and hassle-free. Follow these easy steps to begin your collaborative journey.</p>
+      </div>
+      <div class="cards-container">
+        <div class="card"><h2 class="step-no">1</h2><h2>Create a Room</h2><p>Start a new coding session with a single click and configure your environment.</p></div>
+        <div class="card"><h2 class="step-no">2</h2><h2>Share the Link</h2><p>Invite your team members or students by simply sharing the unique room link.</p></div>
+        <div class="card"><h2 class="step-no">3</h2><h2>Collaborate Instantly</h2><p>Dive into real-time coding, debugging, and learning together, without any extra setup.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="logo"><a href="/"><img src="./assets/imgs/main-logo3.png" alt="" /></a></div>
+        <p>The ultimate platform for real-time collaborative coding. Build amazing projects together, regardless of where your team is located.</p>
+      </div>
+      <div class="footer-links">
+        <div class="links-column">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#steps">How it Works</a></li>
+            <li><a href="https://github.com/Abdo-Hammam/codeSync.git">Github Link</a></li>
+            <li><a href="https://ipn.eg/S/abdo_224/instapay/2ZTmiH">Support</a></li>
+          </ul>
+        </div>
+        <div class="links-column" id="contact">
+          <h3>Contact</h3>
+          <ul>
+            <li><a href="mailto:aghammam@gmail.com">aghammam@gmail.com</a></li>
+            <li><a href="tel:+201016395254">+20-10-1639-5254</a></li>
+            <li>Cairo, Egypt</li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">© 2025 CodeSync. All rights reserved. Built for developers, by developers.</div>
+    </div>
+  </footer>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const fadeElements = document.querySelectorAll(".fade-in-up");
-
-      const fadeInOnScroll = function () {
-        fadeElements.forEach((element) => {
-          const elementTop = element.getBoundingClientRect().top;
-          const windowHeight = window.innerHeight;
-
-          if (elementTop < windowHeight - 100) {
-            element.classList.add("active");
-          }
+    document.addEventListener("DOMContentLoaded", () => {
+      const items = document.querySelectorAll(".fade-in-up");
+      const onScroll = () => {
+        items.forEach(el => {
+          if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add("active");
         });
       };
-      let isScrolling;
-      window.addEventListener("scroll", function () {
-        window.clearTimeout(isScrolling);
-        isScrolling = setTimeout(fadeInOnScroll, 20);
-      });
-
-      fadeInOnScroll();
+      window.addEventListener("scroll", () => clearTimeout(window._scrollTimer) || (window._scrollTimer = setTimeout(onScroll, 20)));
+      onScroll();
     });
   </script>
+</body>
 </html>
