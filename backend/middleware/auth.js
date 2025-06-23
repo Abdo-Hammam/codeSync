@@ -11,7 +11,7 @@ module.exports = function (req, res, next) {
     const token = authHeader.split(' ')[1];
 
     try {
-        const decoded = jwt.verify(token, 'yourSecretKey'); // نفس الـ Secret Key بتاع login
+        const decoded = jwt.verify(token, 'supersecretkey123'); // نفس الـ Secret Key بتاع login
         req.user = decoded;
         next();
     } catch (err) {

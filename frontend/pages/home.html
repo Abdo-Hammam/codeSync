@@ -1,118 +1,177 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="/assets/imgs/favicon.png">
-    <title>Home | CodeSync</title>
-    <link rel="stylesheet" href="../assets/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/normalize.css">
-    <link rel="stylesheet" href="../assets/css/home.css">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="/assets/imgs/favicon.png" />
+    <title>Home</title>
+    <link rel="stylesheet" href="../assets/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/css/normalize.css" />
+    <link rel="stylesheet" href="../assets/css/home.css" />
 
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
-</head>
+  </head>
 
-<body>
-    <!-- <header>
-        <div class="logo">
-            <i class="fas fa-code"></i>
-            <h1>CodeSync</h1>
-        </div>
-        <div class="user-info">
-            <span id="userName">User: Loading...</span>
-            <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
-        </div>
-    </header> -->
-
+  <body>
     <!-- Header -->
     <header>
+      <nav class="logo-nav">
         <div class="logo">
-            <a href="/"><img src="./assets/imgs/main-logo.png" alt=""></a>
+          <a href="/"
+            ><img src="./assets/imgs/main-logo3.png" alt="CodeSync Logo"
+          /></a>
         </div>
-        <div class="user" onclick="showUserActions()">
-            <img src="../assets/imgs/user_logo.png" alt="">
-            <div class="user-action">
-                <ul>
-                    <span id="userName" style="display: none;">asdasdasd: Loading...</span>
+        <div class="links">
+          <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#steps">How it works</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+      </nav>
 
-                    <li><i class="fa-regular fa-user"></i><a href="">Profile</a></li>
-                    <li onclick="showCreateRoomModal()""><i class=" fas fa-plus-circle"></i><a href="">Create Room</a>
-                    </li>
-                    <li onclick="showJoinRoomModal()"><i class="fas fa-sign-in-alt"></i><a href="">Join Room</a></li>
-                    <hr>
-                    <li onclick="logout()"><i class="fas fa-sign-out-alt"></i><a href="/">Logout</a></li>
-                </ul>
-            </div>
+      <div class="user" onclick="showUserActions(event)">
+        <img src="../assets/imgs/us/Abdo.png" alt="" />
+        <div class="user-action">
+          <ul>
+            <span id="userName" style="display: none"
+              >asdasdasd: Loading...</span
+            >
+            <li
+              onclick="window.location.href='/profile'; event.stopPropagation()"
+            >
+              <i class="fa-regular fa-user"></i><a href="/profile">Profile</a>
+            </li>
+            <li onclick="event.stopPropagation(); showCreateRoomModal()">
+              <i class="fas fa-plus-circle"></i><a href="#">Create Room</a>
+            </li>
+            <li onclick="event.stopPropagation(); showJoinRoomModal()">
+              <i class="fas fa-sign-in-alt"></i><a href="#">Join Room</a>
+            </li>
+            <hr />
+            <li onclick="event.stopPropagation(); logout()">
+              <i class="fas fa-sign-out-alt"></i><a href="/">Logout</a>
+            </li>
+          </ul>
         </div>
+      </div>
     </header>
     <!-- Header -->
 
-    <div class="container">
-        <div class="content">
-            <h2>Welcome to CodeSync</h2>
-            <p>Collaborate in real-time with your team. Create or join a room to start coding together!</p>
-            <div class="cards">
-                <div class="card">
-                    <i class="fas fa-plus-circle"></i>
-                    <h3>Create a Room</h3>
-                    <p>Start a new coding session and invite your team to collaborate.</p>
-                    <button onclick="showCreateRoomModal()">Create Now</button>
-                </div>
-                <div class="card">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <h3>Join a Room</h3>
-                    <p>Join an existing room to code with your team in real-time.</p>
-                    <button id="join-button" onclick="showJoinRoomModal()">Join Now</button>
-                </div>
+    <section class="page-content">
+      <div class="container">
+        <section class="left-side">
+          <div class="welcome">
+            <h1 class="welcome-msg">
+              Welcome back, <span style="color: #599bd4">Ahmed</span> !
+            </h1>
+            <p class="welcome-subtext">
+              Invite your team members to collaborate seamlessly and enhance
+              your coding experience.
+            </p>
+            <button class="create-room-btns" onclick="location.href='/signup'">
+              <i class="fa-solid fa-plus" style="padding-right: 4px"></i> Create
+              New Room
+            </button>
+          </div>
+
+          <div class="my-rooms">
+            <h1>My Rooms</h1>
+            <div class="rooms-grid">
+              <div class="room-card">
+                <img src="../assets/imgs/room-bg1.png" alt="" />
+                <h2 class="room-name">AI</h2>
+                <p class="room-users">
+                  <i
+                    class="fa-regular fa-user"
+                    style="color: #599bd4; padding-right: 8px"
+                  ></i
+                  >2 Participants
+                </p>
+                <button class="join-room">
+                  <i
+                    class="fa-solid fa-door-open"
+                    style="padding-right: 12px"
+                  ></i
+                  >Join Room
+                </button>
+              </div>
+              <div class="room-card">
+                <img src="../assets/imgs/room-bg3.jpg" alt="" />
+                <h2 class="room-name">Front End toturial</h2>
+                <p class="room-users">
+                  <i
+                    class="fa-regular fa-user"
+                    style="color: #599bd4; padding-right: 8px"
+                  ></i
+                  >7 Participants
+                </p>
+                <button class="join-room">
+                  <i
+                    class="fa-solid fa-door-open"
+                    style="padding-right: 12px"
+                  ></i
+                  >Join Room
+                </button>
+              </div>
+              <div class="room-card">
+                <img src="../assets/imgs/room-bg2.jpg" alt="" />
+                <h2 class="room-name">Python</h2>
+                <p class="room-users">
+                  <i
+                    class="fa-regular fa-user"
+                    style="color: #599bd4; padding-right: 8px"
+                  ></i
+                  >5 Participants
+                </p>
+                <button class="join-room">
+                  <i
+                    class="fa-solid fa-door-open"
+                    style="padding-right: 12px"
+                  ></i
+                  >Join Room
+                </button>
+              </div>
             </div>
-            <div class="learn-section">
-                <h3>Learn Programming Languages</h3>
-                <ul>
-                    <li><a href="https://www.w3schools.com/js/" target="_blank">Learn JavaScript</a></li>
-                    <li><a href="https://www.w3schools.com/python/" target="_blank">Learn Python</a></li>
-                    <li><a href="https://www.w3schools.com/java/" target="_blank">Learn Java</a></li>
-                </ul>
+          </div>
+
+
+        </section>
+
+        
+        <section class="right-side">
+          <div class="actions">
+            <h1>Quick Actions</h1>
+            <div class="actions-grid">
+              <div class="action">
+                <div class="icon"><i class="fa-solid fa-link"></i></div>
+                <h2>Join Room by Code</h2>
+                <p>Quickly access a room using an invitation code.</p>
+              </div>
+              <div class="action">
+                <div class="icon"><i class="fa-regular fa-clock"></i></div>
+                <h2>View Recent Sessions</h2>
+                <p>Review your past coding sessions and notes.</p>
+              </div>
+              <div class="action">
+                <div class="icon"><i class="fa-solid  fa-book"></i></div>
+                <h2>Saved Snippets</h2>
+                <p>Manage and reuse your essential code snippets.</p>
+              </div>
+              <div class="action">
+                <div class="icon"><i class="fa-regular fa-compass"></i></div>
+                <h2>Explore CodeSync Features</h2>
+                <p>Discover new functionalities and collaboration tools.</p>
+              </div>
             </div>
-            <div class="rooms-list" id="roomsList">
-                <h3>Your Rooms</h3>
-                <!-- Rooms will be populated dynamically -->
-            </div>
-        </div>
-    </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </body>
 
-
-    <!-- Modal لإنشاء Room جديدة -->
-    <div class="modal" id="createRoomModal">
-        <div class="modal-content">
-            <h2>Create New Room</h2>
-            <input type="text" id="newRoomId" placeholder="Enter Room ID">
-            <input type="password" id="roomPassword" placeholder="Set Password (Optional)">
-            <div class="button-group">
-                <button onclick="createRoom()">Create</button>
-                <button class="cancel" onclick="closeModal('createRoomModal')">Cancel</button>
-            </div>
-            <div class="error-message" id="createRoomError"></div>
-        </div>
-    </div>
-
-    <!-- Modal للانضمام لـ Room -->
-    <div class="modal" id="joinRoomModal">
-        <div class="modal-content">
-            <h2>Join a Room</h2>
-            <input type="text" id="joinRoomId" placeholder="Enter Room ID">
-            <input type="password" id="joinRoomPassword" placeholder="Enter Password (If Required)">
-            <div class="button-group">
-                <button onclick="joinRoom()">Join</button>
-                <button class="cancel" onclick="closeModal('joinRoomModal')">Cancel</button>
-            </div>
-            <div class="error-message" id="joinRoomError"></div>
-        </div>
-    </div>
-</body>
-
-<script src="../assets/js/home.js"></script>
-
-
+  <script src="../assets/js/home.js"></script>
 </html>

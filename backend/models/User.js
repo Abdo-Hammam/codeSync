@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
+    password: { type: String, required: false }
 }, { timestamps: true });
 
 // 🔹 تشفير كلمة المرور قبل حفظ المستخدم في قاعدة البيانات
