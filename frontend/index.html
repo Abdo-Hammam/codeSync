@@ -23,14 +23,14 @@
         <div class="links">
           <ul>
             <li><a href="/home">Home</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#about">About Us</a></li>
-            <li><a href="#steps">How it works</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#features" onclick="goToSection(event, 'features')">Features</a></li>
+            <li><a href="#about" onclick="goToSection(event, 'about')">About Us</a></li>
+            <li><a href="#steps" onclick="goToSection(event, 'steps')">How it works</a></li>
+            <li><a href="#contact" onclick="goToSection(event, 'contact')">Contact</a></li>
           </ul>
         </div>
       </nav>
-      <button class="signup" onclick="location.href='/signup'">
+      <button class="signup" id="signupBtn">
         Get Started
       </button>
     </header>
@@ -44,13 +44,14 @@
             for developers and students. Share code,<br />learn, and build
             together seamlessly.
           </p>
-          <button class="signup fade-in-up" onclick="location.href='/signup'">
-            Start Coding Now <i class="fa-solid fa-arrow-right"></i>
+          <button class="signup fade-in-up" id="signupBtn">
+            Start Coding Now
+            <i class="fa-solid fa-arrow-right" style="padding-left: 8px"></i>
           </button>
         </div>
         <div class="blurred-border">
           <img
-            src="./assets/imgs/ales-nesetril-Im7lZjxeLhg-unsplash.jpg"
+            src="./assets/imgs/landing_page/ales-nesetril-Im7lZjxeLhg-unsplash.jpg"
             alt="Landing illustration"
           />
         </div>
@@ -68,7 +69,7 @@
         </div>
 
         <div class="feature fade-in-up">
-          <img src="./assets/imgs/feature2.png" alt="" />
+          <img src="./assets/imgs/landing_page/feature2.png" alt="" />
           <div class="text">
             <h2>Real-Time Coding</h2>
             <p>
@@ -87,10 +88,10 @@
               never been this easy and productive.
             </p>
           </div>
-          <img src="./assets/imgs/feature1.png" alt="" />
+          <img src="./assets/imgs/landing_page/feature1.png" alt="" />
         </div>
         <div class="feature fade-in-up">
-          <img src="./assets/imgs/feature3.png" alt="" />
+          <img src="./assets/imgs/landing_page/feature3.png" alt="" />
           <div class="text">
             <h2>Learn & Grow</h2>
             <p>
@@ -108,7 +109,7 @@
               and intelligent auto-completion.
             </p>
           </div>
-          <img src="./assets/imgs/feature4.png" alt="" />
+          <img src="./assets/imgs/landing_page/feature4.png" alt="" />
         </div>
       </div>
     </section>
@@ -151,7 +152,10 @@
           </div>
         </div>
         <video autoplay muted loop>
-          <source src="./assets/imgs/206779_small.mp4" type="video/mp4" />
+          <source
+            src="./assets/imgs/landing_page/206779_small.mp4"
+            type="video/mp4"
+          />
         </video>
       </div>
     </section>
@@ -201,7 +205,7 @@
         </div>
         <div class="main-card">
           <div class="cards">
-            <div class="card">
+            <div class="card fade-in-left">
               <div class="content">
                 <div class="img">
                   <img src="./assets/imgs/us/Mohsen.jpg" alt="" />
@@ -209,19 +213,24 @@
                 <div class="details">
                   <div class="name">Abdalla Mohsen</div>
                   <div class="job">
-                    Montair <br />
-                    Web Developer
+                    Web Developer<br />
+                    Video Editor 
                   </div>
                 </div>
                 <div class="media-icons">
-                  <a href="https://www.facebook.com/aballamohsen" target="_blank"
+                  <a
+                    href="https://www.facebook.com/aballamohsen"
+                    target="_blank"
                     ><i class="fab fa-facebook-f"></i
                   ></a>
-                  <a href="https://www.linkedin.com/in/abdalla-mohsen/" target="_blank"
+                  <a
+                    href="https://www.linkedin.com/in/abdalla-mohsen/"
+                    target="_blank"
                     ><i class="fab fa-linkedin"></i
                   ></a>
                   <a
-                    href="https://www.instagram.com/abdallamohsn?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank"
+                    href="https://www.instagram.com/abdallamohsn?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                    target="_blank"
                     ><i class="fab fa-instagram"></i
                   ></a>
                   <a href="https://github.com/Abdullah-Mohsen1" target="_blank"
@@ -230,7 +239,7 @@
                 </div>
               </div>
             </div>
-            <div class="card">
+            <div class="card fade-in-up">
               <div class="content">
                 <div class="img">
                   <img src="./assets/imgs/us/Abdo.png" alt="" />
@@ -246,10 +255,14 @@
                   <a href="https://www.facebook.com/abdo.2320/" target="_blank"
                     ><i class="fab fa-facebook-f"></i
                   ></a>
-                  <a href="https://www.linkedin.com/in/abdelrahmanhammam/" target="_blank"
+                  <a
+                    href="https://www.linkedin.com/in/abdelrahmanhammam/"
+                    target="_blank"
                     ><i class="fab fa-linkedin"></i
                   ></a>
-                  <a href="https://www.instagram.com/abdo_abo_hammam.1001/" target="_blank"
+                  <a
+                    href="https://www.instagram.com/abdo_abo_hammam.1001/"
+                    target="_blank"
                     ><i class="fab fa-instagram"></i
                   ></a>
                   <a href="https://github.com/Abdo-Hammam" target="_blank"
@@ -258,7 +271,7 @@
                 </div>
               </div>
             </div>
-            <div class="card">
+            <div class="card fade-in-right">
               <div class="content">
                 <div class="img">
                   <img src="./assets/imgs/us/omar.jpg" alt="" />
@@ -271,13 +284,19 @@
                   </div>
                 </div>
                 <div class="media-icons">
-                  <a href="https://www.facebook.com/omar.fathalla.3914" target="_blank"
+                  <a
+                    href="https://www.facebook.com/omar.fathalla.3914"
+                    target="_blank"
                     ><i class="fab fa-facebook-f"></i
                   ></a>
-                  <a href="https://www.linkedin.com/in/omar-fathalla-698bb0240/" target="_blank"
+                  <a
+                    href="https://www.linkedin.com/in/omar-fathalla-698bb0240/"
+                    target="_blank"
                     ><i class="fab fa-linkedin"></i
                   ></a>
-                  <a href="https://www.instagram.com/omar._fathalla75/" target="_blank"
+                  <a
+                    href="https://www.instagram.com/omar._fathalla75/"
+                    target="_blank"
                     ><i class="fab fa-instagram"></i
                   ></a>
                   <a href="https://github.com/omar-fathalla75" target="_blank"
@@ -315,7 +334,9 @@
                 >
               </li>
               <li>
-                <a href="https://ipn.eg/S/abdo_224/instapay/2ZTmiH">Support Us</a>
+                <a href="https://ipn.eg/S/abdo_224/instapay/2ZTmiH"
+                  >Support Us</a
+                >
               </li>
             </ul>
           </div>
@@ -337,23 +358,6 @@
       </div>
     </footer>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const items = document.querySelectorAll(".fade-in-up");
-        const onScroll = () => {
-          items.forEach((el) => {
-            if (el.getBoundingClientRect().top < window.innerHeight - 100)
-              el.classList.add("active");
-          });
-        };
-        window.addEventListener(
-          "scroll",
-          () =>
-            clearTimeout(window._scrollTimer) ||
-            (window._scrollTimer = setTimeout(onScroll, 20))
-        );
-        onScroll();
-      });
-    </script>
+<script src="./assets/js/index.js"></script>
   </body>
 </html>

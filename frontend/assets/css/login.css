@@ -23,6 +23,7 @@ a {
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: white
 }
 
 .container {
@@ -90,6 +91,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: #0d1117;
 }
 
 .login-section .welcome-msg {
@@ -105,10 +107,9 @@ body {
 
 .login-section .new-acc span a {
   cursor: pointer;
-  /* color: #245ab1; */
   font-weight: 600;
   letter-spacing: 0.01em;
-  color: rgb(44, 34, 250);
+  color: #1f6feb;
 }
 
 .login-section .new-acc span a:hover {
@@ -130,10 +131,19 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.2);
   font-size: 14px;
   outline: none;
+  color: white;
+  caret-color: #388bfd;
+  background-color: #161b22;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #31353a inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .login-section .login-form input[type="submit"] {
-  background-color: black;
+  background-color: #1f6feb;
   color: white;
   font-size: 15px;
   margin-top: 30px;
@@ -144,8 +154,13 @@ body {
   cursor: pointer;
 }
 
+.login-section .login-form input[type="submit"]:hover {
+  background-color: #388bfd;
+}
+
 .login-section .login-form input:focus {
-  border: 1px solid #3f5ea0;
+  border: 1px solid #388afd88;
+  box-shadow: 0 2px 8px #388afd88;
 }
 
 .login-section .separator {
@@ -161,16 +176,15 @@ body {
   transform: translate(-50%);
   height: 1px;
   width: 100%;
-  background: #a1a1a1;
-  z-index: -1;
+  background: #30363d;
 }
 
 .login-section .separator .text {
-  background: white;
   padding: 0 15px;
   position: relative;
   font-size: 16px;
-  color: #333;
+  background: #0d1117;
+  color: white;
 }
 
 .google-login-btn,
@@ -184,8 +198,9 @@ body {
   gap: 10px;
   padding: 18px;
   margin-bottom: 12px;
-  background-color: #fff;
-  border: 1px solid #cecece;
+  background-color: #21262d;
+  border: 1px solid #30363d;
+  color: white;
   border-radius: 25px;
   font-weight: bold;
   font-size: 14px;
@@ -193,22 +208,28 @@ body {
   transition: 0.1s ease;
 }
 
+.google-login-btn svg,
+.facebook-login-btn svg {
+  font-size: 18px;
+}
+
 .google-login-btn:hover,
 .facebook-login-btn:hover {
-  border: 1px solid #3e71c4;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #696969;
+  box-shadow: 0 4px 6px #e0e0e015;
+  background-color: #30363d;
 }
 
 .google-login-btn:active,
 .facebook-login-btn:active {
-  background-color: #eee;
+  background-color: #434950;
 }
 
 /* End Form */
 
 /* Start Login Decoration */
 .full-layout .decoration-section {
-  background-color: var(--main-color);
+  background-color: #161b22;
   flex-basis: 40%;
   display: flex;
   justify-content: space-around;
@@ -222,15 +243,23 @@ body {
   margin: 25px 0;
   width: 120px;
   height: 120px;
-  background-color: #245ab1;
+  background-color: #21262d;
   border-radius: 50%;
 }
-
+.full-layout .decoration-section div span:hover {
+  box-shadow: 0 0 30px #00ffffa6;
+  transform: scale(1.1);
+}
 .full-layout .decoration-section div span i {
   color: white;
   font-size: 40px;
 }
-
+.full-layout .decoration-section div span i::before {
+  transition: 0.3s ease;
+}
+.full-layout .decoration-section div span:hover i::before {
+  color: #00ffff;
+}
 .full-layout .decoration-section div.cir1,
 .full-layout .decoration-section div.cir3 {
   animation: cir-up 36s linear infinite;

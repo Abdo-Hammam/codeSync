@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((res) => res.json())
       .then((data) => {
         localStorage.setItem("token", data.token);
-        window.location.href = "/home";
+        window.location.replace("/home");
       })
       .catch(console.error);
   }

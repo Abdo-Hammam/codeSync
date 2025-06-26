@@ -93,18 +93,39 @@ ul {
   transform: translateY(0);
 }
 
+.fade-in-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: 1s ease;
+}
+
+.fade-in-right.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-in-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: 1s ease;
+}
+
+.fade-in-left.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 /* scrollbar */
 ::-webkit-scrollbar {
   width: 16px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: none;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4cc9f0;
-  border: 2px solid #16213e;
+  background: #388bfd;
 }
 
 /* End Elements */
@@ -222,17 +243,15 @@ ul {
 /* Start Header */
 header {
   padding: 20px 35px;
-  /* background: #19191f; */
   top: 0;
   height: 80px;
-  z-index: 1000;
+  z-index: 1;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   position: sticky;
   display: flex;
   justify-content: space-between;
   align-items: center;
   scroll-snap-align: none;
-
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -363,7 +382,7 @@ header button:hover {
 }
 
 .landing .container .text p {
-  color: #8c8d8b;
+  color: #b3b3b3;
   font-size: 22px;
   line-height: 1.8;
   margin-bottom: 40px;
@@ -749,7 +768,7 @@ header button:hover {
 }
 .about-us .container .text {
   text-align: center;
-  color: #171a1f;
+  color: #388bfd;
 }
 .about-us .container .text h1 {
   position: relative;

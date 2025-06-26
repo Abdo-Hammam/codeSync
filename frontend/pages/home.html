@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="/assets/imgs/favicon.png" />
     <title>Home</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link rel="stylesheet" href="../assets/css/all.min.css" />
     <link rel="stylesheet" href="../assets/css/normalize.css" />
     <link rel="stylesheet" href="../assets/css/home.css" />
@@ -34,7 +36,7 @@
       </nav>
 
       <div class="user" onclick="showUserActions(event)">
-        <img src="../assets/imgs/us/Abdo.png" alt="" />
+        <img src="../assets/imgs/user_logo.png" alt="" />
         <div class="user-action">
           <ul>
             <span id="userName" style="display: none"
@@ -45,10 +47,10 @@
             >
               <i class="fa-regular fa-user"></i><a href="/profile">Profile</a>
             </li>
-            <li onclick="event.stopPropagation(); showCreateRoomModal()">
+            <li onclick="event.stopPropagation(); createRoom()">
               <i class="fas fa-plus-circle"></i><a href="#">Create Room</a>
             </li>
-            <li onclick="event.stopPropagation(); showJoinRoomModal()">
+            <li onclick="event.stopPropagation(); joinRoom()">
               <i class="fas fa-sign-in-alt"></i><a href="#">Join Room</a>
             </li>
             <hr />
@@ -72,76 +74,24 @@
               Invite your team members to collaborate seamlessly and enhance
               your coding experience.
             </p>
-            <button class="create-room-btns" onclick="location.href='/signup'">
-              <i class="fa-solid fa-plus" style="padding-right: 4px"></i> Create
-              New Room
+            <button class="create-room-btns" onclick="createRoom()">
+              <i class="fa-solid fa-plus" style="padding-right: 4px"></i>
+              Create New Room
+            </button>
+            <button class="create-room-btns" onclick="joinRoom()">
+              <i class="fa-solid fa-door-open" style="padding-right: 4px"></i>
+              Join Room
             </button>
           </div>
 
           <div class="my-rooms">
             <h1>My Rooms</h1>
-            <div class="rooms-grid">
-              <div class="room-card">
-                <img src="../assets/imgs/room-bg1.png" alt="" />
-                <h2 class="room-name">AI</h2>
-                <p class="room-users">
-                  <i
-                    class="fa-regular fa-user"
-                    style="color: #599bd4; padding-right: 8px"
-                  ></i
-                  >2 Participants
-                </p>
-                <button class="join-room">
-                  <i
-                    class="fa-solid fa-door-open"
-                    style="padding-right: 12px"
-                  ></i
-                  >Join Room
-                </button>
-              </div>
-              <div class="room-card">
-                <img src="../assets/imgs/room-bg3.jpg" alt="" />
-                <h2 class="room-name">Front End toturial</h2>
-                <p class="room-users">
-                  <i
-                    class="fa-regular fa-user"
-                    style="color: #599bd4; padding-right: 8px"
-                  ></i
-                  >7 Participants
-                </p>
-                <button class="join-room">
-                  <i
-                    class="fa-solid fa-door-open"
-                    style="padding-right: 12px"
-                  ></i
-                  >Join Room
-                </button>
-              </div>
-              <div class="room-card">
-                <img src="../assets/imgs/room-bg2.jpg" alt="" />
-                <h2 class="room-name">Python</h2>
-                <p class="room-users">
-                  <i
-                    class="fa-regular fa-user"
-                    style="color: #599bd4; padding-right: 8px"
-                  ></i
-                  >5 Participants
-                </p>
-                <button class="join-room">
-                  <i
-                    class="fa-solid fa-door-open"
-                    style="padding-right: 12px"
-                  ></i
-                  >Join Room
-                </button>
-              </div>
+            <div class="rooms-grid" id="rooms-grid">
+              
             </div>
           </div>
-
-
         </section>
 
-        
         <section class="right-side">
           <div class="actions">
             <h1>Quick Actions</h1>
@@ -157,7 +107,7 @@
                 <p>Review your past coding sessions and notes.</p>
               </div>
               <div class="action">
-                <div class="icon"><i class="fa-solid  fa-book"></i></div>
+                <div class="icon"><i class="fa-solid fa-book"></i></div>
                 <h2>Saved Snippets</h2>
                 <p>Manage and reuse your essential code snippets.</p>
               </div>
@@ -171,7 +121,6 @@
         </section>
       </div>
     </section>
+    <script src="../assets/js/home.js"></script>
   </body>
-
-  <script src="../assets/js/home.js"></script>
 </html>
