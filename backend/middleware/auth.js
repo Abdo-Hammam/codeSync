@@ -6,7 +6,7 @@ module.exports = function (req, res, next) {
     if (!authHeader) {
         return res.status(401).json({ message: 'Access Denied. No token provided.' });
     }
-
+    
     // استخراج التوكن بدون كلمة "Bearer"
     const token = authHeader.split(' ')[1];
 

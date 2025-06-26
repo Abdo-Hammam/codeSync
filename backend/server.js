@@ -12,6 +12,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
+const Room = require("../backend/models/Room");
 
 // إنشاء الـ roomOwners هنا
 const roomOwners = new Map();
@@ -100,7 +101,6 @@ app.use(cors({ origin: "*" }));
 app.use("/api", apiRoutes);
 app.use("/api/auth", googleAuthRoutes);
 app.use("/", userRoutes.router); // استخدام userRoutes.router بدل userRoutes
-
 
 // الاتصال بقاعدة البيانات
 mongoose
@@ -203,72 +203,181 @@ io.on("connection", (socket) => {
   // console.log('🔌 New user connected:', socket.id);
 
   // لما المستخدم ينضم لـ Room
-  socket.on("joinRoom", (data) => {
-    const { roomId, username } = data;
-    socket.join(roomId);
-    // console.log(`User ${socket.id} (${username}) joined room: ${roomId}`);
+  io.on("connection", (socket) => {
+    socket.on("joinRoom", async (data) => {
+      const { roomId, username } = data;
+      try {
+        socket.join(roomId);
+        console.log(`User ${socket.id} (${username}) joined room: ${roomId}`);
 
-    // إضافة المستخدم لقايمة المستخدمين في الـ Room
-    if (!roomUsers.has(roomId)) {
-      roomUsers.set(roomId, []);
-    }
-    const users = roomUsers.get(roomId);
-    const userExists = users.find((user) => user.username === username);
-    if (!userExists) {
-      users.push({
-        id: socket.id,
-        username,
-        canEdit: username === roomOwners.get(roomId),
-      });
-      roomUsers.set(roomId, users);
-    }
+        const room = await Room.findOne({ roomId });
 
-    // إرسال الكود الحالي للمستخدم الجديد
-    const code = roomCodes.get(roomId) || "Write your code here...";
-    socket.emit("updateCode", code);
+        if (!room) {
+          console.log(`❌ Room ${roomId} not found`);
+          socket.emit("error", { message: "Room not found" });
+          return;
+        }
 
-    // إرسال اللغة الحالية للمستخدم الجديد
-    const language = roomLanguages.get(roomId) || "javascript";
-    socket.emit("languageChange", { language });
+        const owner = roomOwners.get(roomId);
+        console.log(
+          `📌 Room ${roomId} owner: ${owner}, joining user: ${username}`
+        );
 
-    // إرسال حالة التعديل (readOnly أو مش readOnly)
-    const owner = roomOwners.get(roomId);
-    const editors = roomEditors.get(roomId) || [];
-    const canEdit = username === owner || editors.includes(username);
-    // console.log(`📌 Setting editor mode for ${username} in room ${roomId}: canEdit=${canEdit}, readOnly=${!canEdit}`);
-    socket.emit("setEditorMode", { readOnly: !canEdit });
+        // إدارة roomUsers في الذاكرة
+        if (!roomUsers.has(roomId)) {
+          roomUsers.set(roomId, []);
+        }
+        let users = roomUsers.get(roomId);
+        const userExists = users.find((user) => user.username === username);
+        if (!userExists) {
+          const canEdit =
+            username === owner ||
+            (roomEditors.get(roomId) || []).includes(username);
+          users.push({
+            id: socket.id,
+            username,
+            canEdit,
+          });
+          roomUsers.set(roomId, users);
+          console.log(
+            `📋 Added user ${username} to roomUsers for room ${roomId}:`,
+            roomUsers.get(roomId)
+          );
+        } else {
+          // تحديث socket.id لو اليوزر موجود بالفعل
+          users = users.map((user) =>
+            user.username === username ? { ...user, id: socket.id } : user
+          );
+          roomUsers.set(roomId, users);
+          console.log(
+            `📋 Updated socket.id for user ${username} in room ${roomId}:`,
+            roomUsers.get(roomId)
+          );
+        }
 
-    // إرسال قايمة المستخدمين لكل المستخدمين في الـ Room
-    io.to(roomId).emit("updateUsers", { users: roomUsers.get(roomId) });
+        // إدارة participants في قاعدة البيانات مع تنظيف التكرارات
+        const userInParticipants = room.participants.some(
+          (p) => p.toLowerCase() === username.toLowerCase()
+        );
 
-    // إرسال تنبيه لكل المستخدمين في الـ Room
-    socket.to(roomId).emit("userJoined", { userId: socket.id });
+        if (!userInParticipants) {
+          room.participants.push(username);
+          // تنظيف التكرارات قبل الحفظ
+          room.participants = [...new Set(room.participants)];
+          await room.save();
+          console.log(
+            `✅ Added ${username} to participants for room ${roomId} in database. Participants:`,
+            room.participants
+          );
+        } else {
+          // تنظيف التكرارات إذا وجدت
+          const uniqueParticipants = [...new Set(room.participants)];
+          if (uniqueParticipants.length !== room.participants.length) {
+            room.participants = uniqueParticipants;
+            await room.save();
+            console.log(
+              `🧹 Cleaned duplicates in participants for room ${roomId}:`,
+              room.participants
+            );
+          } else {
+            console.log(
+              `ℹ️ User ${username} already in room ${roomId} participants`
+            );
+          }
+        }
+
+        const latestVersion = room.versions[room.versions.length - 1];
+        const code = latestVersion
+          ? latestVersion.code
+          : "Write your code here...";
+        const language = room.language || "javascript";
+
+        roomCodes.set(roomId, code);
+        roomLanguages.set(roomId, language);
+
+        socket.emit("codeChange", { code, roomId, username });
+        socket.emit("languageChange", { language });
+
+        const editors = roomEditors.get(roomId) || [];
+        const canEdit = username === room.owner || editors.includes(username);
+        console.log(
+          `📌 Setting editor mode for ${username} in room ${roomId}: canEdit=${canEdit}, readOnly=${!canEdit}`
+        );
+        socket.emit("setEditorMode", { readOnly: !canEdit });
+
+        io.to(roomId).emit("updateUsers", { users: roomUsers.get(roomId) });
+        socket.to(roomId).emit("userJoined", { userId: username });
+      } catch (error) {
+        console.error("Error in joinRoom:", error);
+        socket.emit("error", { message: "Error joining room" });
+      }
+    });
   });
 
   // لما مستخدم يغير اللغة
-  socket.on("languageChange", (data) => {
+  socket.on("languageChange", async (data) => {
     const { language, roomId } = data;
-    // console.log('📝 Language changed to:', language, 'for room:', roomId);
-    roomLanguages.set(roomId, language); // تخزين اللغة للـ Room
-    io.to(roomId).emit("languageChange", { language }); // إرسال التغيير لكل المستخدمين في الـ Room
+    try {
+      console.log("📝 Language changed to:", language, "for room:", roomId);
+      roomLanguages.set(roomId, language); // تحديث اللغة في الذاكرة
+
+      // تحديث اللغة في قاعدة البيانات
+      const room = await Room.findOne({ roomId });
+      if (room) {
+        room.language = language;
+        await room.save();
+      }
+
+      // إرسال التغيير لكل المستخدمين في الـ Room
+      io.to(roomId).emit("languageChange", { language });
+    } catch (error) {
+      console.error("Error in languageChange:", error);
+    }
   });
 
   // لما مستخدم يرسل كود
-  socket.on("codeChange", (data) => {
+  socket.on("codeChange", async (data) => {
     const { code, roomId, username } = data;
+    console.log(
+      `📝 codeChange received: username=${username}, roomId=${roomId}, code=${code.substring(
+        0,
+        50
+      )}...`
+    );
     const owner = roomOwners.get(roomId);
     const editors = roomEditors.get(roomId) || [];
     const canEdit = username === owner || editors.includes(username);
 
     if (canEdit) {
-      // console.log('📝 Code received:', code, 'for room:', roomId);
-      roomCodes.set(roomId, code); // تخزين الكود في الـ Room
-      socket.to(roomId).emit("codeChange", { code });
+      roomCodes.set(roomId, code);
+      const room = await Room.findOne({ roomId });
+      if (room) {
+        const versionNumber = room.versions.length + 1;
+        room.versions.push({
+          versionNumber,
+          code,
+          createdAt: new Date(),
+        });
+        await room.save();
+        console.log(
+          `📤 Broadcasting codeChange to room ${roomId} with username=${username}, versionNumber=${versionNumber}`
+        );
+        io.to(roomId).emit("codeChange", {
+          code,
+          roomId,
+          username,
+          versionNumber,
+        });
+      }
     } else {
-      socket.emit(
-        "updateCode",
-        roomCodes.get(roomId) || "Write your code here..."
+      console.log(
+        `📤 Sending current code back to ${username} (no edit permissions)`
       );
+      socket.emit("codeChange", {
+        code: roomCodes.get(roomId) || "Write your code here...",
+        roomId,
+        username,
+      });
     }
   });
 
