@@ -61,8 +61,11 @@ function loadUserInfo() {
       const payload = JSON.parse(atob(token.split(".")[1]));
       username = payload.username || "Unknown";
       email = payload.email || "Unknown";
+      fName = payload.fullName || "Unknown";
       document.getElementById("userName").textContent = `Username: ${username}`;
       document.getElementById("email").textContent = `Email: ${email}`;
+      document.querySelector(".profile-info h2").textContent = `${(capitalized =
+        fName.charAt(0).toUpperCase() + fName.slice(1).toLowerCase())}`;
       loadRooms();
     } else {
       document.getElementById("userName").textContent = "User: Not logged in";

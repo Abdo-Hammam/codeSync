@@ -9,9 +9,10 @@ import { FacebookAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.1
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("signupForm").addEventListener("submit", async function (e) {
-        e.preventDefault(); // منع إعادة تحميل الصفحة
+        e.preventDefault();
 
         const fullName = document.getElementById("full-name").value;
+        const userName = document.getElementById("userName").value;
         const email = document.getElementById("email").value;
         const password = document.getElementById("pass").value;
 
@@ -19,19 +20,19 @@ document.addEventListener("DOMContentLoaded", function () {
             const response = await fetch('http://127.0.0.1:5000/signup', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username: fullName, email, password }),
+                body: JSON.stringify({ username: userName, fullName, email, password }),
             });
 
             const data = await response.json();
             if (response.ok) {
-                localStorage.setItem("token", data.token); // تخزين الـ Token
-                window.location.href = "/login"; // تحويل المستخدم لصفحة Home
+                localStorage.setItem("token", data.token);
+                window.location.href = "/login";
             } else {
-                alert(data.message || "حدث خطأ أثناء التسجيل.");
+                alert(data.message || "Error while logging in");
             }
         } catch (error) {
             console.error("Error:", error);
-            alert("فشل الاتصال بالسيرفر.");
+            alert("cannot accses to the server");
         }
     });
 

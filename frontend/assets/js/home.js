@@ -1,4 +1,5 @@
 let username = null;
+let fName = "";
 
 // دالة جلب الـ Rooms
 function loadRooms() {
@@ -71,7 +72,10 @@ function loadUserInfo() {
     if (token) {
       const payload = JSON.parse(atob(token.split(".")[1]));
       username = payload.username || "Unknown";
+      fName = payload.fullName || "Unknown";
+      let firstName = `${fName.split(" ")[0].charAt(0).toUpperCase()}${fName.split(" ")[0].slice(1)}`
       document.getElementById("userName").textContent = `username: ${username}`;
+      document.querySelector(".left-side .welcome-msg span").textContent = `${firstName}`;
       loadRooms();
     } else {
       document.getElementById("userName").textContent = "User: Not logged in";

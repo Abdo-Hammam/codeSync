@@ -7,8 +7,8 @@ const auth = require("../middleware/auth");
 
 router.post("/signup", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    console.log("Signup request:", { username, email });
+    const { username, fullName, email, password } = req.body;
+    // console.log("Signup request:", { username, email });
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -19,15 +19,15 @@ router.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("Hashed password:", hashedPassword);
 
-    const newUser = new User({ username, email, password: hashedPassword });
+    const newUser = new User({ username, fullName, email, password: hashedPassword });
     await newUser.save();
 
     console.log("User saved:", newUser);
 
     const token = jwt.sign(
-      { id: newUser._id, email: newUser.email, username: newUser.username },
+      { id: newUser._id, email: newUser.email, fullName: newUser.fullName ,username: newUser.username },
       process.env.JWT_SECRET || "supersecretkey123",
-      { expiresIn: "3h" }
+      { expiresIn: "12h" }
     );
     console.log("Generated token for signup:", token);
 
@@ -75,7 +75,7 @@ router.post("/login", async (req, res) => {
     console.log("Password matched, generating token...");
 
     const token = jwt.sign(
-      { id: user._id, email: user.email, username: user.username },
+      { id: user._id, email: user.email, fullName: user.fullName, username: user.username },
       process.env.JWT_SECRET || "supersecretkey123",
       { expiresIn: "3h" }
     );

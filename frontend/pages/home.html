@@ -27,10 +27,9 @@
         <div class="links">
           <ul>
             <li><a href="/home">Home</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#about">About Us</a></li>
-            <li><a href="#steps">How it works</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li onclick="event.stopPropagation(); createRoom()"><a href="#">Create Room</a></li>
+            <li onclick="event.stopPropagation(); joinRoom()"><a href="#">Join Room</a></li>
+            <li><a href="#steps">Search Rooms</a></li>
           </ul>
         </div>
       </nav>
@@ -68,7 +67,7 @@
         <section class="left-side">
           <div class="welcome">
             <h1 class="welcome-msg">
-              Welcome back, <span style="color: #599bd4">Ahmed</span> !
+              Welcome back, <span style="color: #599bd4"></span> !
             </h1>
             <p class="welcome-subtext">
               Invite your team members to collaborate seamlessly and enhance
