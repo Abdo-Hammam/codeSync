@@ -1,7 +1,6 @@
 let username = null;
 let fName = "";
 
-// دالة جلب الـ Rooms
 function loadRooms() {
   fetch(`/api/userRooms?username=${username}`, {
     headers: {
@@ -48,7 +47,6 @@ function loadRooms() {
     });
 }
 
-// دالة الـ Logout
 function logout() {
   localStorage.removeItem("token");
   window.location.replace("");
@@ -65,7 +63,6 @@ function showUserActions() {
 }
 showUserActions();
 
-// جلب اسم المستخدم من الـ Token
 function loadUserInfo() {
   try {
     const token = localStorage.getItem("token");
@@ -73,9 +70,13 @@ function loadUserInfo() {
       const payload = JSON.parse(atob(token.split(".")[1]));
       username = payload.username || "Unknown";
       fName = payload.fullName || "Unknown";
-      let firstName = `${fName.split(" ")[0].charAt(0).toUpperCase()}${fName.split(" ")[0].slice(1)}`
+      let firstName = `${fName.split(" ")[0].charAt(0).toUpperCase()}${fName
+        .split(" ")[0]
+        .slice(1)}`;
       document.getElementById("userName").textContent = `username: ${username}`;
-      document.querySelector(".left-side .welcome-msg span").textContent = `${firstName}`;
+      document.querySelector(
+        ".left-side .welcome-msg span"
+      ).textContent = `${firstName}`;
       loadRooms();
     } else {
       document.getElementById("userName").textContent = "User: Not logged in";
@@ -106,6 +107,9 @@ function createRoom() {
     focusConfirm: false,
     backdrop: "rgba(0, 0, 0, 0.62)",
     didOpen: () => {
+      document.getElementById("roomId").value = `room_${Math.random()
+        .toString(36)
+        .substr(2, 9)}`;
       const inputs = Swal.getPopup().querySelectorAll("input");
       inputs.forEach((input) => {
         input.addEventListener("keypress", (e) => {
@@ -124,7 +128,6 @@ function createRoom() {
         return false;
       }
 
-      // بترجع البيانات كمجسم
       return {
         roomId,
         password,
