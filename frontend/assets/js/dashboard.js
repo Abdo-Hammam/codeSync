@@ -12,6 +12,7 @@ let username = null;
 let isOwner = false;
 let usersInRoom = [];
 let requestingUser = null;
+let isLoadingVersion = false;
 
 var socket = io("http://127.0.0.1:5000");
 
@@ -20,8 +21,7 @@ const defaultCode = {
   python: 'print("Try CodeSync")',
   java: 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Try CodeSync");\n    }\n}',
   cpp: '#include <iostream>\nint main() {\n    std::cout << "Try CodeSync" << std::endl;\n    return 0;\n}',
-  csharp:
-    'using System;\nclass Program {\n    static void Main() {\n        Console.WriteLine("Try CodeSync");\n    }\n}',
+  csharp: 'using System;\nclass Program {\n    static void Main() {\n        Console.WriteLine("Try CodeSync");\n    }\n}',
   ruby: 'puts "Try CodeSync"',
   php: '<?php echo "Try CodeSync"; ?>',
   go: 'package main\nimport "fmt"\nfunc main() {\n    fmt.Println("Try CodeSync")\n}',
@@ -58,9 +58,8 @@ socket.on("languageChange", function (data) {
 });
 
 editor.on("change", function (instance, change) {
-  if (!isUpdating && currentRoomId) {
+  if (!isUpdating && currentRoomId && !isLoadingVersion) {
     const code = editor.getValue();
-    console.log(`📤 Sending codeChange: code=${code.substring(0, 50)}...`);
     socket.emit("codeChange", { code, roomId: currentRoomId, username });
   }
 });
@@ -68,33 +67,14 @@ editor.on("change", function (instance, change) {
 let lastVersionNumber = 0;
 
 socket.on("codeChange", function (data) {
-  console.log(
-    `📥 Received codeChange: versionNumber=${
-      data.versionNumber || "N/A"
-    }, data.username=${data.username}, local username=${username}, roomId=${
-      data.roomId
-    }, code=${data.code.substring(0, 50)}...`
-  );
+  if (isLoadingVersion) {
+    return;
+  }
 
   if (isUpdating) {
-    console.log("📥 Skipped codeChange: already updating");
     return;
   }
 
-  if (isOwner) {
-    lastVersionNumber = data.versionNumber || lastVersionNumber;
-    isUpdating = true;
-    const cursor = editor.getCursor();
-    editor.setValue(
-      data.code || defaultCode[document.getElementById("languageSelect").value]
-    );
-    editor.setCursor(cursor);
-    editor.refresh();
-    isUpdating = false;
-    return;
-  }
-
-  console.log(`📥 Applying codeChange: non-owner updating editor`);
   lastVersionNumber = data.versionNumber || lastVersionNumber;
   isUpdating = true;
   const cursor = editor.getCursor();
@@ -116,25 +96,224 @@ function runCode() {
   socket.emit("runCode", { code, language, roomId: currentRoomId });
 }
 
+function saveVersion() {
+  if (!currentRoomId) {
+    showNotification("Please join a room first!");
+    return;
+  }
+
+  const code = editor.getValue();
+  const token = localStorage.getItem("token");
+
+  fetch("/api/saveVersion", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      roomId: currentRoomId,
+      code,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((err) => {
+          throw new Error(err.message || "Failed to save version");
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data.success) {
+        showNotification(`Version ${data.versionNumber} saved successfully!`);
+      } else {
+        showNotification(data.message || "Error saving version");
+      }
+    })
+    .catch((error) => {
+      showNotification(error.message || "Error saving version");
+    });
+}
+
+function showRoomHistory() {
+  if (!currentRoomId) {
+    showNotification("Please join a room first!");
+    return;
+  }
+  fetch(`/api/roomVersions?roomId=${currentRoomId}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        document.getElementById("roomIdDisplay").textContent = currentRoomId;
+        document.getElementById("participantsDisplay").textContent =
+          data.participants.join(", ");
+        const versionList = document.getElementById("versionList");
+        versionList.innerHTML = "";
+        data.versions.forEach((version) => {
+          const li = document.createElement("li");
+          li.innerHTML = `Version ${version.versionNumber} - ${new Date(
+            version.createdAt
+          ).toLocaleString()} <button class="load-version-btn" onclick="loadVersion(${
+            version.versionNumber
+          })">Load</button>`;
+          versionList.appendChild(li);
+        });
+        document.getElementById("roomHistoryPopup").style.display = "block";
+      } else {
+        showNotification(data.message || "Error fetching room history");
+      }
+    })
+    .catch((error) => {
+      showNotification("Error fetching room history");
+    });
+}
+
+function loadVersion(versionNumber) {
+  if (!currentRoomId) {
+    showNotification("Please join a room first!");
+    return;
+  }
+
+  isLoadingVersion = true;
+  fetch(
+    `/api/roomVersionCode?roomId=${currentRoomId}&versionNumber=${versionNumber}`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        isUpdating = true;
+        editor.setValue(data.code);
+        editor.refresh();
+        isUpdating = false;
+        showNotification(`Version ${versionNumber} loaded successfully`);
+        closeRoomHistory();
+      } else {
+        showNotification(data.message || "Error loading version");
+      }
+    })
+    .catch((error) => {
+      showNotification("Error loading version");
+    })
+    .finally(() => {
+      isLoadingVersion = false;
+    });
+}
+
+function loadUserInfo() {
+  const pendingVersion = sessionStorage.getItem("pendingVersionLoad");
+  const urlParams = new URLSearchParams(window.location.search);
+  const versionNumber = urlParams.get("version");
+  if (pendingVersion) {
+    const { roomId, versionNumber, code } = JSON.parse(pendingVersion);
+    
+    currentRoomId = urlParams.get("room");
+    if (roomId === currentRoomId && versionNumber) {
+      setTimeout(() => {
+        isLoadingVersion = true;
+        isUpdating = true;
+        editor.setValue(code);
+        editor.refresh();
+        isUpdating = false;
+        showNotification(`Version ${versionNumber} loaded successfully`);
+        sessionStorage.removeItem("pendingVersionLoad");
+        isLoadingVersion = false;
+      }, 300);
+    }
+  }
+
+  try {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      username = payload.username || "Unknown";
+      document.getElementById("userName").textContent = `User: ${username}`;
+      currentRoomId = urlParams.get("room");
+
+      if (currentRoomId) {
+        fetch(`/api/checkRoom?roomId=${currentRoomId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.exists) {
+              isOwner = data.owner === username;
+              const userRoleIcon = document.getElementById("userRoleIcon");
+              userRoleIcon.className = isOwner
+                ? "fas fa-crown admin-icon"
+                : "fas fa-circle user-icon";
+              socket.emit("joinRoom", { roomId: currentRoomId, username });
+              showNotification(`Joined room: ${currentRoomId}`);
+              hideAccessRequestNotification();
+
+              if (versionNumber && !pendingVersion) {
+                isLoadingVersion = true;
+                fetch(
+                  `/api/roomVersionCode?roomId=${currentRoomId}&versionNumber=${versionNumber}`,
+                  {
+                    headers: { Authorization: `Bearer ${token}` },
+                  }
+                )
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if (data.success) {
+                      isUpdating = true;
+                      editor.setValue(data.code);
+                      editor.refresh();
+                      isUpdating = false;
+                      showNotification(`Loaded version ${versionNumber}`);
+                    } else {
+                      showNotification(data.message || "Error loading version");
+                    }
+                  })
+                  .catch((error) => {
+                    showNotification("Error loading version");
+                  })
+                  .finally(() => {
+                    isLoadingVersion = false;
+                  });
+              }
+            } else {
+              alert("Room not found");
+              window.location.href = "/home";
+            }
+          })
+          .catch((error) => {
+            alert("Error checking room");
+            window.location.href = "/home";
+          });
+      } else {
+        alert("No Room ID provided");
+        window.location.href = "/home";
+      }
+    } else {
+      window.location.href = "/login";
+    }
+  } catch (error) {
+    window.location.href = "/login";
+  }
+}
+
+function closeRoomHistory() {
+  document.getElementById("roomHistoryPopup").style.display = "none";
+}
+
 socket.on("codeOutput", function (data) {
   document.getElementById("output").textContent =
     data.output || "Error running code";
 });
 
-socket.on("updateCode", function (data) {
-  console.log(`📥 Received updateCode: code=${data.substring(0, 50)}...`);
-  isUpdating = true;
-  editor.setValue(
-    data || defaultCode[document.getElementById("languageSelect").value]
-  );
-  editor.refresh();
-  isUpdating = false;
-});
-
 socket.on("setEditorMode", (data) => {
-  console.log("Received setEditorMode:", data);
-  editor.setOption("readOnly", data.readOnly); // استخدام CodeMirror instance مباشرة
-  console.log(`CodeMirror editor set to readOnly: ${data.readOnly}`);
+  editor.setOption("readOnly", data.readOnly);
   const requestAccessBtn = document.getElementById("requestAccessBtn");
   if (data.readOnly && !isOwner) {
     requestAccessBtn.style.display = "inline-block";
@@ -188,7 +367,6 @@ document.addEventListener("click", function (event) {
 });
 
 function toggleEditAccess(user, canEdit) {
-  // console.log(`📤 Sending toggleEditAccess: user=${user}, canEdit=${canEdit}, roomId=${currentRoomId}`);
   socket.emit("toggleEditAccess", {
     roomId: currentRoomId,
     username: user,
@@ -199,21 +377,14 @@ function toggleEditAccess(user, canEdit) {
 function requestAccess() {
   if (!currentRoomId || !username) {
     showNotification("Error: Unable to request access.");
-    // console.log('❌ requestAccess failed: currentRoomId or username missing');
     return;
   }
-  console.log(
-    `📤 Sending requestAccess: username=${username}, roomId=${currentRoomId}`
-  );
   socket.emit("requestAccess", { roomId: currentRoomId, username });
   showNotification("Access request sent to the admin.");
   document.getElementById("requestAccessBtn").style.display = "none";
 }
 
 socket.on("accessRequest", function (data) {
-  console.log(
-    `📥 Received accessRequest: username=${data.username}, isOwner=${isOwner}`
-  );
   if (isOwner) {
     requestingUser = data.username;
     const accessRequestNotification = document.getElementById(
@@ -229,7 +400,6 @@ socket.on("accessRequest", function (data) {
 
 function grantAccess() {
   if (requestingUser) {
-    console.log(`📤 Granting access to ${requestingUser}`);
     socket.emit("toggleEditAccess", {
       roomId: currentRoomId,
       username: requestingUser,
@@ -237,18 +407,13 @@ function grantAccess() {
     });
     showNotification(`Access granted to ${requestingUser}.`);
     hideAccessRequestNotification();
-  } else {
-    console.log("❌ grantAccess failed: requestingUser is null");
   }
 }
 
 function denyAccess() {
   if (requestingUser) {
-    console.log(`📤 Denying access to ${requestingUser}`);
     showNotification(`Access request from ${requestingUser} denied.`);
     hideAccessRequestNotification();
-  } else {
-    // console.log('❌ denyAccess failed: requestingUser is null');
   }
 }
 
@@ -265,28 +430,22 @@ function shareRoom() {
     showNotification("Please join a room first!");
     return;
   }
-  fetch("/api/generateRoomToken", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-    body: JSON.stringify({ roomId: currentRoomId }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        const shareLink = `http://127.0.0.1:5000/join?token=${data.token}`;
-        navigator.clipboard.writeText(shareLink).then(() => {
-          showNotification("Room link copied to clipboard!");
-        });
-      } else {
-        showNotification(data.message);
-      }
-    })
-    .catch((error) => {
-      showNotification("Error generating share link");
-    });
+  
+  const token = localStorage.getItem("token");
+  if (!token) {
+    showNotification("You need to be logged in to share a room");
+    return;
+  }
+  
+  // إنشاء رابط مباشر مع token المصادقة
+  const shareLink = `${window.location.origin}/dashboard?room=${currentRoomId}&auth=${token}`;
+  
+  navigator.clipboard.writeText(shareLink).then(() => {
+    showNotification("Room link copied to clipboard!");
+  }).catch(err => {
+    console.error("Failed to copy:", err);
+    showNotification("Failed to copy link");
+  });
 }
 
 function clearEditor() {
@@ -295,8 +454,6 @@ function clearEditor() {
 }
 
 function logout() {
-  // localStorage.removeItem('token');
-  // window.location.href = '/';
   window.history.back();
 }
 
@@ -312,55 +469,5 @@ function showNotification(message) {
 socket.on("userJoined", (data) => {
   showNotification(`User ${data.userId} joined the room!`);
 });
-
-function loadUserInfo() {
-  try {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      username = payload.username || "Unknown";
-      console.log(`📌 Username from token: ${username}`);
-
-      document.getElementById("userName").textContent = `User: ${username}`;
-
-      const urlParams = new URLSearchParams(window.location.search);
-      currentRoomId = urlParams.get("room");
-      if (currentRoomId) {
-        fetch(`/api/checkRoom?roomId=${currentRoomId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.exists) {
-              isOwner = data.owner === username;
-              // console.log(`📌 User ${username} isOwner=${isOwner}`);
-              const userRoleIcon = document.getElementById("userRoleIcon");
-              userRoleIcon.className = isOwner
-                ? "fas fa-crown admin-icon"
-                : "fas fa-circle user-icon";
-              socket.emit("joinRoom", { roomId: currentRoomId, username });
-              showNotification(`Joined room: ${currentRoomId}`);
-              hideAccessRequestNotification();
-            } else {
-              alert("Room not found");
-              window.location.href = "/home";
-            }
-          })
-          .catch((error) => {
-            alert("Error checking room");
-            window.location.href = "/home";
-          });
-      } else {
-        alert("No Room ID provided");
-        window.location.href = "/home";
-      }
-    } else {
-      window.location.href = "/login";
-    }
-  } catch (error) {
-    window.location.href = "/login";
-  }
-}
 
 window.onload = loadUserInfo;

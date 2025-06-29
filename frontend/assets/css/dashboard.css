@@ -134,7 +134,8 @@ body {
 .dropdown-item .user-icon {
   color: #00a3ff;
 }
-.logout-btn {
+.logout-btn,
+.close-history-btn {
   background-color: #ca4027;
   color: white;
   border: none;
@@ -190,8 +191,8 @@ select {
   color: black;
   background: white;
   cursor: pointer;
-  transition:  0.3s;
-  border:none
+  transition: 0.3s;
+  border: none;
 }
 select:hover,
 select:focus {
@@ -206,6 +207,9 @@ select option {
 .run-btn,
 .share-btn,
 .clear-btn,
+.save-btn,
+.load-version-btn,
+.history-btn,
 .request-access-btn {
   background-color: #444857;
   color: white;
@@ -221,10 +225,14 @@ select option {
 .run-btn {
   background-color: #407bff;
 }
-
+.load-version-btn {
+  margin-left: 8px;
+}
 .run-btn:hover,
 .share-btn:hover,
 .clear-btn:hover,
+.save-btn:hover,
+.history-btn:hover,
 .request-access-btn:hover {
   background-color: #646774;
 }
@@ -244,6 +252,15 @@ select option {
   border: 1px solid #292a2e;
   border-top: none;
   margin-top: 0;
+}
+#versionList {
+  list-style: none;
+  padding: 0;
+}
+#versionList li {
+  padding: 8px 0;
+  margin: 8px 0;
+    border-bottom: 1px solid #333;
 }
 .CodeMirror {
   height: 100% !important;
@@ -281,8 +298,9 @@ select option {
 .cm-atom {
   color: #8be9fd !important;
 }
-.CodeMirror pre.CodeMirror-line, .CodeMirror pre.CodeMirror-line-like {
-    color: white;
+.CodeMirror pre.CodeMirror-line,
+.CodeMirror pre.CodeMirror-line-like {
+  color: white;
 }
 .CodeMirror-scroll::-webkit-scrollbar,
 .output::-webkit-scrollbar {
@@ -315,7 +333,7 @@ select option {
 }
 .output {
   flex: 1;
-  background: #1f1f1f ;
+  background: #1f1f1f;
   border: 1px solid #5e5e5e;
   border-radius: 5px;
   padding: 15px;

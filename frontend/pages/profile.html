@@ -19,7 +19,20 @@
     <div class="container">
       <!-- Header -->
       <div class="profile-header">
-        <img src="../assets/imgs/user_logo.png" alt="Avatar" />
+        <label for="avatar-upload" style="cursor: pointer">
+          <img
+            id="profile-avatar"
+            src="../assets/imgs/user_logo.png"
+            alt="Avatar"
+          />
+          <input
+            type="file"
+            id="avatar-upload"
+            accept="image/*"
+            style="display: none"
+            onchange="uploadAvatar(event)"
+          />
+        </label>
         <div class="profile-info">
           <h2></h2>
           <p id="userName"></p>
@@ -27,7 +40,7 @@
           <p>Account Created On: Feb 21, 2023</p>
           <div class="buttons">
             <button class="btn btn-edit">Edit Profile</button>
-            <button class="btn btn-logout"  onclick="logout()">Log Out</button>
+            <button class="btn btn-logout" onclick="logout()">Log Out</button>
           </div>
         </div>
       </div>

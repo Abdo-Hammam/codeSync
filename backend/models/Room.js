@@ -13,8 +13,8 @@ const roomSchema = new mongoose.Schema({
   versions: {
     type: [
       {
-        versionNumber: Number,
-        code: String,
+        versionNumber: { type: Number, required: true },
+        code: { type: String, required: true },
         createdAt: {
           type: Date,
           default: Date.now,

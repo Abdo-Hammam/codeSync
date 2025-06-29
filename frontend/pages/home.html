@@ -27,36 +27,55 @@
         <div class="links">
           <ul>
             <li><a href="/home">Home</a></li>
-            <li onclick="event.stopPropagation(); createRoom()"><a href="#">Create Room</a></li>
-            <li onclick="event.stopPropagation(); joinRoom()"><a href="#">Join Room</a></li>
-            <li><a href="#steps">Search Rooms</a></li>
+            <li onclick="event.stopPropagation(); createRoom()">
+              <a href="#">Create Room</a>
+            </li>
+            <li onclick="event.stopPropagation(); joinRoom()">
+              <a href="#">Join Room</a>
+            </li>
           </ul>
         </div>
       </nav>
 
-      <div class="user" onclick="showUserActions(event)">
-        <img src="../assets/imgs/user_logo.png" alt="" />
-        <div class="user-action">
-          <ul>
-            <span id="userName" style="display: none"
-              >asdasdasd: Loading...</span
-            >
-            <li
-              onclick="window.location.href='/profile'; event.stopPropagation()"
-            >
-              <i class="fa-regular fa-user"></i><a href="/profile">Profile</a>
-            </li>
-            <li onclick="event.stopPropagation(); createRoom()">
-              <i class="fas fa-plus-circle"></i><a href="#">Create Room</a>
-            </li>
-            <li onclick="event.stopPropagation(); joinRoom()">
-              <i class="fas fa-sign-in-alt"></i><a href="#">Join Room</a>
-            </li>
-            <hr />
-            <li onclick="event.stopPropagation(); logout()">
-              <i class="fas fa-sign-out-alt"></i><a href="/">Logout</a>
-            </li>
-          </ul>
+      <div class="right">
+        <li>
+          <i
+            class="fa-solid fa-magnifying-glass"
+            style="
+              position: absolute;
+              z-index: 100;
+              top: 50%;
+              transform: translateY(-50%);
+              left: 8px;
+            "
+          ></i>
+          <input type="text" id="searchInput" placeholder="Search for Room" />
+          <div id="searchResults"></div>
+        </li>
+        <div class="user" onclick="showUserActions(event)">
+          <img src="../assets/imgs/user_logo.png" alt="" />
+          <div class="user-action">
+            <ul>
+              <span id="userName" style="display: none"
+                >asdasdasd: Loading...</span
+              >
+              <li
+                onclick="window.location.href='/profile'; event.stopPropagation()"
+              >
+                <i class="fa-regular fa-user"></i><a href="/profile">Profile</a>
+              </li>
+              <li onclick="event.stopPropagation(); createRoom()">
+                <i class="fas fa-plus-circle"></i><a href="#">Create Room</a>
+              </li>
+              <li onclick="event.stopPropagation(); joinRoom()">
+                <i class="fas fa-sign-in-alt"></i><a href="#">Join Room</a>
+              </li>
+              <hr />
+              <li onclick="event.stopPropagation(); logout()">
+                <i class="fas fa-sign-out-alt"></i><a href="/">Logout</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </header>
@@ -85,9 +104,7 @@
 
           <div class="my-rooms">
             <h1>My Rooms</h1>
-            <div class="rooms-grid" id="rooms-grid">
-              
-            </div>
+            <div class="rooms-grid" id="rooms-grid"></div>
           </div>
         </section>
 
@@ -95,7 +112,7 @@
           <div class="actions">
             <h1>Quick Actions</h1>
             <div class="actions-grid">
-              <div class="action">
+              <div class="action" onclick="joinRoomByCode()">
                 <div class="icon"><i class="fa-solid fa-link"></i></div>
                 <h2>Join Room by Code</h2>
                 <p>Quickly access a room using an invitation code.</p>
@@ -105,12 +122,21 @@
                 <h2>View Recent Sessions</h2>
                 <p>Review your past coding sessions and notes.</p>
               </div>
-              <div class="action">
+              <div
+                class="action"
+                onclick="window.open(
+  'https://w3schools.com/',
+  '_blank' 
+);"
+              >
                 <div class="icon"><i class="fa-solid fa-book"></i></div>
-                <h2>Saved Snippets</h2>
-                <p>Manage and reuse your essential code snippets.</p>
+                <h2>Learn to Code</h2>
+                <p>With the world's largest web developer site.</p>
               </div>
-              <div class="action">
+              <div
+                class="action"
+                onclick="window.location.href='http://127.0.0.1:5000/#features'"
+              >
                 <div class="icon"><i class="fa-regular fa-compass"></i></div>
                 <h2>Explore CodeSync Features</h2>
                 <p>Discover new functionalities and collaboration tools.</p>
@@ -120,6 +146,34 @@
         </section>
       </div>
     </section>
+
+    <div
+      id="roomHistoryPopup"
+      style="
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #1a1a1a;
+        color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      "
+    >
+      <h2>Room Details</h2>
+      <p><strong>Room ID:</strong> <span id="roomIdDisplay"></span></p>
+      <p>
+        <strong>Participants:</strong> <span id="participantsDisplay"></span>
+      </p>
+      <h3>Version History</h3>
+      <ul id="versionList"></ul>
+      <button class="close-history-btn" onclick="closeRoomHistory()">
+        Close
+      </button>
+    </div>
     <script src="../assets/js/home.js"></script>
   </body>
 </html>

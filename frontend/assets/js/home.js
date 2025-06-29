@@ -1,5 +1,6 @@
 let username = null;
 let fName = "";
+let currentRoomId = null;
 
 function loadRooms() {
   fetch(`/api/userRooms?username=${username}`, {
@@ -12,39 +13,114 @@ function loadRooms() {
       const roomsList = document.getElementById("rooms-grid");
 
       if (data.rooms && data.rooms.length > 0) {
+        roomsList.innerHTML = "";
         data.rooms.forEach((room) => {
           const roomItem = document.createElement("div");
           roomItem.className = "room-card";
           roomItem.innerHTML = `
-                <img src="../assets/imgs/room-bg1.png" alt="" />
+                <img src="../assets/imgs/room-bg1.png" alt="Room Image" style="cursor: pointer;" onclick="showRoomHistory('${room.roomId}')"/>
                 <h2 class="room-name">${room.roomId}</h2>
                 <p class="room-users">
-                  <i
-                    class="fa-regular fa-user"
-                    style="color: #599bd4; padding-right: 8px"
-                  ></i
-                  >${room.participants.length} Participants
+                  <i class="fa-regular fa-user" style="color: #599bd4; padding-right: 8px"></i>
+                  ${room.participants.length} Participants
                 </p>
                 <button class="join-room" onclick="window.location.href='/dashboard?room=${room.roomId}'">
-                  <i
-                    class="fa-solid fa-door-open"
-                    style="padding-right: 12px"
-                  ></i
-                  >Join Room
+                  <i class="fa-solid fa-door-open" style="padding-right: 12px"></i>Join Room
                 </button>
-`;
+          `;
           roomsList.appendChild(roomItem);
         });
       } else {
-        roomsContainer.innerHTML = "<p>No rooms found.</p>";
-        roomsList.appendChild(roomsContainer);
+        roomsList.innerHTML = "<p>No rooms found.</p>";
       }
     })
     .catch((error) => {
       console.error("Error loading rooms:", error);
-      const roomsContainer = document.getElementById("roomsList");
-      roomsContainer.innerHTML = "<p>Error loading rooms.</p>";
+      roomsList.innerHTML = "<p>Error loading rooms.</p>";
     });
+}
+
+function showRoomHistory(roomId) {
+  currentRoomId = roomId;
+  fetch(`/api/roomVersions?roomId=${roomId}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        document.getElementById("roomIdDisplay").textContent = roomId;
+        document.getElementById("participantsDisplay").textContent = data.participants.join(", ");
+        const versionList = document.getElementById("versionList");
+        versionList.innerHTML = "";
+        data.versions.forEach((version) => {
+          const li = document.createElement("li");
+          li.innerHTML = `Version ${version.versionNumber} - ${new Date(version.createdAt).toLocaleString()} <button class="load-version-btn" onclick="joinRoomWithVersion('${roomId}', ${version.versionNumber})">Join</button>`;
+          versionList.appendChild(li);
+        });
+        document.getElementById("roomHistoryPopup").style.display = "block";
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: data.message || "Error in getting version date",
+          confirmButtonColor: "#407bff",
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching room history:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error in getting version date",
+        confirmButtonColor: "#407bff",
+      });
+    });
+}
+
+function joinRoomWithVersion(roomId, versionNumber) {
+  fetch(`/api/roomVersionCode?roomId=${roomId}&versionNumber=${versionNumber}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        sessionStorage.setItem('pendingVersionLoad', JSON.stringify({
+          roomId,
+          versionNumber,
+          code: data.code,
+          timestamp: Date.now()
+        }));
+        
+        closeRoomHistory();
+        window.location.href = `/dashboard?room=${roomId}&version=${versionNumber}`;
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: data.message || "Error in getting version",
+          confirmButtonColor: "#407bff",
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error loading version:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error in getting version",
+        confirmButtonColor: "#407bff",
+      });
+    });
+}
+
+function closeRoomHistory() {
+  document.getElementById("roomHistoryPopup").style.display = "none";
+  currentRoomId = null;
 }
 
 function logout() {
@@ -81,7 +157,6 @@ function loadUserInfo() {
     } else {
       document.getElementById("userName").textContent = "User: Not logged in";
       window.location.replace("/login");
-      f;
     }
   } catch (error) {
     console.error("Error loading user info:", error);
@@ -228,7 +303,7 @@ function joinRoom() {
     title: "Join Room",
     html: `
       <input id="roomId" class="swal2-input" style="width: 80%;" placeholder="Room ID">
-      <input id="roomPassword" type="password" class="swal2-input" style="width: 80%;" placeholder="Set Password (Optional)">
+      <input id="roomPassword" type="password" class="swal2-input" style="width: 80%;" placeholder="Enter Password (Optional)">
     `,
     confirmButtonText: "Join",
     cancelButtonText: "Cancel",
@@ -365,5 +440,185 @@ function copyToClipboard(elementId) {
       alert("Copy failed. Your browser may be blocking clipboard access.");
     });
 }
+
+function searchRooms(query) {
+  if (!query) {
+    document.getElementById("searchResults").style.display = "none";
+    return;
+  }
+
+  fetch(`/api/searchRooms?query=${encodeURIComponent(query)}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const searchResults = document.getElementById("searchResults");
+      searchResults.innerHTML = "";
+      searchResults.style.display = data.rooms.length > 0 ? "block" : "none";
+
+      if (data.rooms.length > 0) {
+        data.rooms.forEach((room) => {
+          const resultItem = document.createElement("div");
+          resultItem.innerHTML = `
+            <strong>${room.roomId}</strong>
+            <p>${room.participants.length} participants</p>
+          `;
+          resultItem.onclick = () => {
+            document.getElementById("searchInput").value = room.roomId;
+            searchResults.style.display = "none";
+            joinRoomWithId(room.roomId, room.hasPassword);
+          };
+          searchResults.appendChild(resultItem);
+        });
+      } else {
+        searchResults.innerHTML = "<div>No Rooms Found</div>";
+      }``
+    })
+    .catch((error) => {
+      console.error("Error searching for rooms:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to search for rooms. Please try again.",
+      });
+    });
+}
+
+function joinRoomWithId(roomId, hasPassword) {
+  if (hasPassword) {
+    Swal.fire({
+      title: "Enter Password",
+      html: `
+        <input id="roomPassword" type="password" class="swal2-input" style="width: 80%;" placeholder="Password">
+      `,
+      confirmButtonText: "Join",
+      cancelButtonText: "Cancel",
+      showCancelButton: true,
+      showLoaderOnConfirm: true,
+      confirmButtonColor: "#407bff",
+      cancelButtonColor: "#d33",
+      focusConfirm: false,
+      preConfirm: () => {
+        const password = document.getElementById("roomPassword").value.trim();
+        return { roomId, password };
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const { roomId, password } = result.value;
+        fetch("/api/verifyRoomPassword", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ roomId, password }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.success) {
+              Swal.close();
+              window.location.href = `/dashboard?room=${roomId}`;
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: data.message || "Incorrect password",
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error verifying password:", error);
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Failed to verify password. Please try again.",
+            });
+          });
+      }
+    });
+  } else {
+    window.location.href = `/dashboard?room=${roomId}`;
+  }
+}
+
+function joinRoomByCode() {
+  Swal.fire({
+    title: "Join Room by Share Link",
+    html: `
+      <input id="shareLink" class="swal2-input" placeholder="Paste the share link here">
+    `,
+    confirmButtonText: "Join Room",
+    showCancelButton: true,
+    confirmButtonColor: "#407bff",
+    cancelButtonColor: "#d33",
+    focusConfirm: false,
+    preConfirm: () => {
+      const shareLink = document.getElementById("shareLink").value.trim();
+      if (!shareLink) {
+        Swal.showValidationMessage("Please paste the share link");
+        return false;
+      }
+      
+      try {
+        // Extract token from URL
+        const url = new URL(shareLink);
+        const token = url.searchParams.get("token");
+        if (!token) {
+          Swal.showValidationMessage("Invalid share link - no token found");
+          return false;
+        }
+        return { token };
+      } catch (e) {
+        Swal.showValidationMessage("Invalid URL format");
+        return false;
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const { token } = result.value;
+      
+      // Verify the token and get room ID
+      fetch(`/api/decodeRoomToken?token=${encodeURIComponent(token)}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          window.location.href = `/dashboard?room=${data.roomId}`;
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: data.message || "Invalid share link",
+          });
+        }
+      })
+      .catch(error => {
+        console.error("Error decoding token:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to process share link",
+        });
+      });
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", (e) => {
+    searchRooms(e.target.value);
+  });
+});
 
 window.onload = loadUserInfo;
